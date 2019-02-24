@@ -1,2 +1,2 @@
 # JavaExams
-Work-in-progress solutions of exam problems
+Work-in-progress solutions from exams
