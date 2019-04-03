@@ -12,8 +12,7 @@ import java.time.LocalDateTime;
 @Entity(name = "transactions")
 public class Transaction extends BaseEntity {
     private TransactionType transactionType;
-    private User originator;
-    private Iban originatorIban;
+    private BankAccount bankAccount;
     private String recipientFirstName;
     private String recipientLastName;
     private String recipientIban;
@@ -34,27 +33,17 @@ public class Transaction extends BaseEntity {
         this.transactionType = transactionType;
     }
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "originator", referencedColumnName = "id")
-    public User getOriginator() {
-        return originator;
-    }
-
-    public void setOriginator(User originator) {
-        this.originator = originator;
-    }
-
     @ManyToOne(targetEntity = BankAccount.class)
-    @JoinColumn(name = "originator_iban", referencedColumnName = "iban")
-    public Iban getOriginatorIban() {
-        return originatorIban;
+    @JoinColumn(name = "bank_account", referencedColumnName = "id", nullable = false)
+    public BankAccount getBankAccount() {
+        return bankAccount;
     }
 
-    public void setOriginatorIban(Iban originatorIban) {
-        this.originatorIban = originatorIban;
+    public void setBankAccount(BankAccount bankAccount) {
+        this.bankAccount = bankAccount;
     }
 
-    @Column(nullable = false)
+    @Column(name = "recipient_first_name", nullable = false)
     public String getRecipientFirstName() {
         return recipientFirstName;
     }
@@ -63,7 +52,7 @@ public class Transaction extends BaseEntity {
         this.recipientFirstName = recipientFirstName;
     }
 
-    @Column(nullable = false)
+    @Column(name = "recipient_last_name", nullable = false)
     public String getRecipientLastName() {
         return recipientLastName;
     }

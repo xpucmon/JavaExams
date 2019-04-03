@@ -110,7 +110,7 @@ public class BankAccount extends BaseEntity {
         this.cards = cards;
     }
 
-    @OneToMany(targetEntity = Transaction.class, mappedBy = "originatorIban")
+    @OneToMany(targetEntity = Transaction.class, mappedBy = "bankAccount")
     public Set<Transaction> getTransactions() {
         return transactions;
     }
