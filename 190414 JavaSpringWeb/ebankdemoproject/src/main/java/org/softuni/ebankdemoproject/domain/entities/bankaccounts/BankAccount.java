@@ -33,6 +33,7 @@ public class BankAccount extends BaseEntity {
 
     public BankAccount() {
         this.cards = new HashSet<>();
+        this.transactions = new HashSet<>();
     }
 
     @Column(nullable = false, unique = true, updatable = false)

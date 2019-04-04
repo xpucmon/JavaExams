@@ -5,12 +5,10 @@ import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.Beneficiary;
 import org.softuni.ebankdemoproject.domain.entities.cards.Card;
 import org.softuni.ebankdemoproject.domain.entities.loans.Loan;
-import org.softuni.ebankdemoproject.domain.entities.transactions.Transaction;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity(name = "users")
@@ -28,7 +26,6 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Role> authorities;
 
     public User() {
-        this.bankAccounts = new HashSet<>();
     }
 
     @Column(nullable = false, unique = true, updatable = false)
@@ -124,7 +121,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id", nullable = false),
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     public Set<Role> getAuthorities() {
         return authorities;
