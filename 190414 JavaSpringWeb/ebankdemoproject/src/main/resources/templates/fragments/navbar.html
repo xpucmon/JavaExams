@@ -35,7 +35,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" th:href="@{/viruses/show}">Bank Accounts</a>
                             <a class="dropdown-item" th:href="@{/viruses/add}"
-                               sec:authorize="hasAnyAuthority('ADMIN', 'MODERATOR')">Add Account</a>
+                               sec:authorize="hasAnyAuthority('ADMIN', 'EMPLOYEE')">Add Account</a>
                         </div>
                     </li>
                     <th:block sec:authorize="hasAuthority('ADMIN')">

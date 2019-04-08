@@ -8,7 +8,6 @@ import org.softuni.ebankdemoproject.domain.entities.loans.Loan;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "users")

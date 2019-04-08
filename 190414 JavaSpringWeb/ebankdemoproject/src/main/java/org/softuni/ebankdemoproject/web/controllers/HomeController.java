@@ -18,7 +18,7 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    @PreAuthorize(value = "hasAnyAuthority('ADMIN', 'USER', 'MODERATOR')")
+    @PreAuthorize(value = "hasAnyAuthority('ROOT', 'ADMIN', 'USER', 'MODERATOR')")
     public ModelAndView home(HttpSession session, Authentication principal, ModelAndView modelAndView) {
         modelAndView.addObject("user", principal.getName());
         modelAndView.setViewName("home");

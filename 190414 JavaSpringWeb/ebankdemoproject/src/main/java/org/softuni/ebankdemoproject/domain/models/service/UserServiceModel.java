@@ -4,13 +4,11 @@ import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.Beneficiary;
 import org.softuni.ebankdemoproject.domain.entities.cards.Card;
 import org.softuni.ebankdemoproject.domain.entities.loans.Loan;
-import org.softuni.ebankdemoproject.domain.entities.users.Role;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class UserServiceModel {
-    private String id;
+public class UserServiceModel extends BaseServiceModel {
     private String username;
     private String password;
     private String firstName;
@@ -21,7 +19,7 @@ public class UserServiceModel {
     private Set<Beneficiary> beneficiaries;
     private Set<Loan> loans;
     private Set<Card> cards;
-    private Set<Role> authorities;
+    private Set<RoleServiceModel> authorities;
 
     public UserServiceModel() {
         this.bankAccounts = new HashSet<>();
@@ -29,14 +27,6 @@ public class UserServiceModel {
         this.loans = new HashSet<>();
         this.cards = new HashSet<>();
         this.authorities = new HashSet<>();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -119,11 +109,11 @@ public class UserServiceModel {
         this.cards = cards;
     }
 
-    public Set<Role> getAuthorities() {
+    public Set<RoleServiceModel> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<Role> authorities) {
+    public void setAuthorities(Set<RoleServiceModel> authorities) {
         this.authorities = authorities;
     }
 }

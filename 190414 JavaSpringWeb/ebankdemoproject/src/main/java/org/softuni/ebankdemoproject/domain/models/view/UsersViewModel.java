@@ -8,7 +8,7 @@ public class UsersViewModel {
     private String id;
     private String username;
     private String email;
-    private Set<Role> authorities;
+    private Set<String> authorities;
 
     public String getId() {
         return id;
@@ -34,11 +34,11 @@ public class UsersViewModel {
         this.email = email;
     }
 
-    public Set<Role> getAuthorities() {
+    public Set<String> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<Role> authorities) {
+    public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
     }
 }
