@@ -75,8 +75,11 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ModelAndView profile(ModelAndView modelAndView,
-                              @ModelAttribute(name = "bindingModel") UserEditBindingModel userEditBindingModel) {
+    public ModelAndView profile(ModelAndView modelAndView, Principal principal) {
+
+        String name = principal.getName();
+        UserEditBindingModel userEditBindingModel = this.modelMapper.map(this.usersService
+                .loadUserByUsername(name), UserEditBindingModel.class);
 
         modelAndView.addObject("bindingModel", userEditBindingModel);
 

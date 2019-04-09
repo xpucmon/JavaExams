@@ -82,8 +82,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void changeRole(String id, String role) {
 
-        User user = this.usersRepository
-                .findById(id)
+        User user = this.usersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
         UserServiceModel userServiceModel = this.modelMapper.map(user, UserServiceModel.class);
@@ -120,6 +119,8 @@ public class UsersServiceImpl implements UsersService {
         user.setPassword(!"".equals(userServiceModel.getPassword()) ?
                 this.passwordEncoder.encode(userServiceModel.getPassword()) :
                 user.getPassword());
+        user.setFirstName(userServiceModel.getFirstName());
+        user.setLastName(userServiceModel.getLastName());
         user.setEmail(userServiceModel.getEmail());
         user.setPhone(userServiceModel.getPhone());
 

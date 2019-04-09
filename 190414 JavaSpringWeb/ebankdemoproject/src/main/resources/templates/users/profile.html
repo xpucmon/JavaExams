@@ -11,14 +11,12 @@
 
     <main>
         <div class="container mt-4">
-            <h1 th:class="text-center" th:text="PROFILE"></h1>
-            <!--<h4 th:class="text-center" th:text="${bindingModel.getUsername()}"></h4>-->
-            <!--<hr>-->
-            <!--<form class="form w-50 mx-auto" th:method="post" th:object="${bindingModel}"-->
-                  <!--th:action="@{/users/edit/{id}(id=${bindingModel.getId()})}">-->
-                <!--<th:block th:include="~{fragments/form-profile}"></th:block>-->
-                <!--<button type="submit" class="btn bg-info text-white">Confirm changes</button>-->
-            <!--</form>-->
+            <hr>
+            <form class="form w-50 mx-auto" th:method="post" th:object="${bindingModel}"
+                  th:action="@{/users/edit/{id}(id=${bindingModel.getId()})}">
+                <th:block th:include="~{fragments/form-profile}"></th:block>
+                <button type="submit" class="btn bg-info text-white">Confirm changes</button>
+            </form>
         </div>
     </main>
 </div>

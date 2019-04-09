@@ -21,9 +21,11 @@
                     <th scope="col">Current role</th>
                     <th scope="col">Edit user profile</th>
                     <th scope="col">Delete user</th>
-                    <th scope="col">Set new role</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
+                    <th:block sec:authorize="hasAuthority('ADMIN')">
+                        <th scope="col">Set new role</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </th:block>
                 </tr>
                 </thead>
                 <tbody>
@@ -57,7 +59,8 @@
                         <a class="btn btn-danger"
                            th:href="@{/users/delete/{id}(id=${user.getId()})}">Delete user</a>
                     </td>
-                    <td th:if="${!#lists.contains(user.getAuthorities(), roleRoot)}">
+                    <td th:if="${!#lists.contains(user.getAuthorities(), roleRoot)}"
+                        sec:authorize="hasAuthority('ADMIN')">
                             <th:block th:if="${#lists.contains(user.getAuthorities(), roleAdmin)}">
                                 <a class="btn btn-info" th:text="'Set User'"
                                    th:href="@{/users/rolechange/user/{id}(id=${user.getId()})}"></a>

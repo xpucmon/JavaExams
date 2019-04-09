@@ -33,9 +33,9 @@
                             Profile
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" th:href="@{/users/profile}">View profile</a>
+                            <a class="dropdown-item" th:href="@{/users/profile}">User profile</a>
                             <a class="dropdown-item" th:href="@{/users/all-users}"
-                               sec:authorize="hasAuthority('ADMIN')">All users</a>
+                               sec:authorize="hasAnyAuthority('EMPLOYEE', 'ADMIN')">All users</a>
                         </div>
                     </li>
                     <th:block sec:authorize="hasAuthority('ADMIN')">
