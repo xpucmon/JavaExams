@@ -1,0 +1,35 @@
+<div class="form-group" th:classappend="${#fields.hasErrors('username')}? 'text-danger'">
+    <label for="inputUserame">Username</label>
+    <input type="text" th:field="*{username}" name="username" class="form-control" id="inputUserame" readonly>
+    <small id="usernameHelp" th:each="error : ${#fields.errors('username')}" th:text="${error}"></small>
+</div>
+<div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'text-danger'">
+    <label for="inputPassword">New Password</label>
+    <input type="password" th:field="*{password}" name="password" class="form-control" id="inputpassword" placeholder="Enter new password">
+    <small id="passwordHelp" th:each="error : ${#fields.errors('password')}" th:text="${error}"></small>
+</div>
+<div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')}? 'text-danger'">
+    <label for="inputConfirmPassword">Confirm Password</label>
+    <input type="password" th:field="*{confirmPassword}" name="confirmPassword" class="form-control" id="inputConfirmPassword" placeholder="Repeat the new password">
+    <small id="confirmPasswordHelp" th:each="error : ${#fields.errors('confirmPassword')}" th:text="${error}"></small>
+</div>
+<div class="form-group" th:classappend="${#fields.hasErrors('firstName')}? 'text-danger'">
+    <label for="inputFirstName">First Name</label>
+    <input type="text" th:field="*{firstName}" name="firstName" class="form-control" id="inputFirstName" placeholder="Enter first name" readonly>
+    <small id="firstNameHelp" th:each="error : ${#fields.errors('firstName')}" th:text="${error}"></small>
+</div>
+<div class="form-group" th:classappend="${#fields.hasErrors('lastName')}? 'text-danger'">
+    <label for="inputLastName">Last Name</label>
+    <input type="text" th:field="*{lastName}" name="lastName" class="form-control" id="inputLastName" placeholder="Enter last name" readonly>
+    <small id="lastNameHelp" th:each="error : ${#fields.errors('lastName')}" th:text="${error}"></small>
+</div>
+<div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'text-danger'">
+    <label for="inputEmail">Email</label>
+    <input type="email" th:field="*{email}" name="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+    <small id="emailHelp" th:each="error : ${#fields.errors('email')}" th:text="${error}"></small>
+</div>
+<div class="form-group" th:classappend="${#fields.hasErrors('phone')}? 'text-danger'">
+    <label for="inputPhone">Phone</label>
+    <input type="text" th:field="*{phone}" name="phone" class="form-control" id="inputPhone" placeholder="Enter phone">
+    <small id="phoneHelp" th:each="error : ${#fields.errors('phone')}" th:text="${error}"></small>
+</div>

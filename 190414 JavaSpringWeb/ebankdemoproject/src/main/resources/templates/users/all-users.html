@@ -18,8 +18,10 @@
                     <th scope="col">#</th>
                     <th scope="col">Username</th>
                     <th scope="col">Email</th>
-                    <th scope="col">Current Role</th>
-                    <th scope="col">Set New Role</th>
+                    <th scope="col">Current role</th>
+                    <th scope="col">Edit user profile</th>
+                    <th scope="col">Delete user</th>
+                    <th scope="col">Set new role</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
@@ -31,7 +33,11 @@
                     <td th:text="${user.email}"></td>
                     <td>
                         <ul>
-                            <th:block th:if="${#lists.contains(user.getAuthorities(), roleAdmin)}">
+                            <th:block th:if="${#lists.contains(user.getAuthorities(), roleRoot)}">
+                                <li th:text="${roleRoot}"></li>
+                            </th:block>
+                            <th:block th:if="${#lists.contains(user.getAuthorities(), roleAdmin) &&
+                                                !#lists.contains(user.getAuthorities(), roleRoot)}">
                                 <li th:text="${roleAdmin}"></li>
                             </th:block>
                             <th:block th:if="${!#lists.contains(user.getAuthorities(), roleAdmin) &&
@@ -44,24 +50,32 @@
                         </ul>
                     </td>
                     <td th:if="${!#lists.contains(user.getAuthorities(), roleRoot)}">
+                        <a class="btn btn-outline-secondary"
+                           th:href="@{/users/edit/{id}(id=${user.getId()})}">Edit profile</a>
+                    </td>
+                    <td th:if="${!#lists.contains(user.getAuthorities(), roleRoot)}">
+                        <a class="btn btn-danger"
+                           th:href="@{/users/delete/{id}(id=${user.getId()})}">Delete user</a>
+                    </td>
+                    <td th:if="${!#lists.contains(user.getAuthorities(), roleRoot)}">
                             <th:block th:if="${#lists.contains(user.getAuthorities(), roleAdmin)}">
-                                <a class="btn btn-info" th:text="'Set to User'"
+                                <a class="btn btn-info" th:text="'Set User'"
                                    th:href="@{/users/rolechange/user/{id}(id=${user.getId()})}"></a>
-                                <a class="btn btn-info mr-1" th:text="'Set to Employee'"
+                                <a class="btn btn-info mr-1" th:text="'Set Employee'"
                                        th:href="@{/users/rolechange/employee/{id}(id=${user.getId()})}"></a>
                             </th:block>
                             <th:block th:if="${#lists.contains(user.getAuthorities(), roleEmployee) &&
                                                 !#lists.contains(user.getAuthorities(), roleAdmin)}">
-                                <a class="btn btn-info" th:text="'Set to User'"
+                                <a class="btn btn-info" th:text="'Set User'"
                                    th:href="@{/users/rolechange/user/{id}(id=${user.getId()})}"></a>
-                                <a class="btn btn-info mr-1" th:text="'Set to Admin'"
+                                <a class="btn btn-info mr-1" th:text="'Set Admin'"
                                        th:href="@{/users/rolechange/admin/{id}(id=${user.getId()})}"></a>
                             </th:block>
                             <th:block th:if="${#lists.contains(user.getAuthorities(), roleUser) &&
                                                 !#lists.contains(user.getAuthorities(), roleEmployee)}">
-                                <a class="btn btn-info" th:text="'Set to Employee'"
+                                <a class="btn btn-info" th:text="'Set Employee'"
                                    th:href="@{/users/rolechange/employee/{id}(id=${user.getId()})}"></a>
-                                <a class="btn btn-info mr-1" th:text="'Set to Admin'"
+                                <a class="btn btn-info mr-1" th:text="'Set Admin'"
                                        th:href="@{/users/rolechange/admin/{id}(id=${user.getId()})}"></a>
                             </th:block>
                     </td>

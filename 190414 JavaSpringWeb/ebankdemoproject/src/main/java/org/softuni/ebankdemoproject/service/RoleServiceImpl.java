@@ -31,22 +31,6 @@ public class RoleServiceImpl implements RoleService {
             this.roleRepository.save(new Role(RoleConstant.EMPLOYEE.name()));
             this.roleRepository.save(new Role(RoleConstant.USER.name()));
         }
-
-//        Role root = new Role();
-//        root.setAuthority(RoleConstant.ROOT.name());
-//        this.roleRepository.saveAndFlush(root);
-//
-//        Role admin = new Role();
-//        admin.setAuthority(RoleConstant.ADMIN.name());
-//        this.roleRepository.saveAndFlush(admin);
-//
-//        Role employee = new Role();
-//        employee.setAuthority(RoleConstant.EMPLOYEE.name());
-//        this.roleRepository.saveAndFlush(employee);
-//
-//        Role user = new Role();
-//        user.setAuthority(RoleConstant.USER.name());
-//        this.roleRepository.saveAndFlush(user);
     }
 
     @Override

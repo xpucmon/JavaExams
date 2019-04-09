@@ -13,7 +13,7 @@
         <div class="container mt-4">
             <h1 th:class="text-center">Register</h1>
             <hr>
-            <form class="form w-50 mx-auto" th:action="@{/register}" method="post" th:object="${bindingModel}">
+            <form class="form w-50 mx-auto" th:action="@{/users/register}" method="post" th:object="${bindingModel}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('username')}? 'text-danger'">
                     <label for="inputUserame">Username</label>
                     <input type="text" th:field="*{username}" name="username" class="form-control" id="inputUserame" placeholder="Enter username">

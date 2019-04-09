@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/navbar}"></th:block>
+    </header>
+
+    <main>
+        <div class="container mt-4">
+            <h1 th:class="text-center" th:text="'Edit profile details for user: ' + ${bindingModel.getUsername()}"></h1>
+            <hr>
+            <form class="form w-50 mx-auto" th:method="post" th:object="${bindingModel}"
+                  th:action="@{/users/edit/{id}(id=${bindingModel.getId()})}">
+                <th:block th:include="~{fragments/form-profile}"></th:block>
+                <button type="submit" class="btn bg-info text-white">Confirm changes</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

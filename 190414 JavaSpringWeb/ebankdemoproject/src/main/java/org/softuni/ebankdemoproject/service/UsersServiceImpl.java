@@ -109,9 +109,45 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public UserServiceModel editUserProfile(UserServiceModel userServiceModel) {
+        if (this.validator.validate(userServiceModel).size() != 0) {
+            throw new IllegalArgumentException("Error during profile update!");
+        }
+
+        User user = this.usersRepository.findByUsername(userServiceModel.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found!"));
+
+        user.setPassword(!"".equals(userServiceModel.getPassword()) ?
+                this.passwordEncoder.encode(userServiceModel.getPassword()) :
+                user.getPassword());
+        user.setEmail(userServiceModel.getEmail());
+        user.setPhone(userServiceModel.getPhone());
+
+        User savedUser = this.usersRepository.save(user);
+
+        return this.modelMapper.map(savedUser, UserServiceModel.class);
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        try {
+            this.usersRepository.deleteById(id);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return this.usersRepository
                 .findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Override
+    public UserDetails loadUserById(String id) {
+        return this.usersRepository
+                .findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
