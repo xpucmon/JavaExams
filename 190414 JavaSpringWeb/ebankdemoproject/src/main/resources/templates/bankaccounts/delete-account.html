@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/navbar}"></th:block>
+    </header>
+
+    <main>
+        <div class="container mt-4">
+            <h1 th:class="text-center" th:text="'Delete bank account: ' + ${bindingModel.getIban()}"></h1>
+            <hr>
+            <form class="form w-50 mx-auto" th:action="@{/bankaccounts/delete/{id}(id=${bindingModel.getId()})}"
+                  method="post" th:object="${bindingModel}">
+                <fieldset th:disabled="disabled">
+                    <div class="form-group">
+                        <label for="inputIban">IBAN</label>
+                        <input type="text" th:field="*{iban}" name="iban" class="form-control" id="inputIban">
+                    </div>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('accountType')}? 'text-danger'">
+                        <label for="inputBankAccountType">Bank Account Type</label>
+                        <select class="form-control" th:field="*{accountType}" id="inputBankAccountType">
+                            <option th:each="accountType : ${accountTypes}"
+                                    th:value="${accountType}" th:text="${accountType.getFieldDescription()}"></option>
+                        </select>
+                        <small id="accountTypeHelp" th:each="error : ${#fields.errors('accountType')}"
+                               th:text="${error}"></small>
+                    </div>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('accountStatus')}? 'text-danger'">
+                        <label for="inputBankAccountStatus">Bank Account Status</label>
+                        <select class="form-control" th:field="*{accountStatus}" id="inputBankAccountStatus">
+                            <option th:each="accountStatus : ${accountStatuses}"
+                                    th:value="${accountStatus}"
+                                    th:text="${accountStatus.getFieldDescription()}"></option>
+                        </select>
+                        <small id="accountStatusHelp" th:each="error : ${#fields.errors('accountStatus')}"
+                               th:text="${error}"></small>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" id="inputAccountAddCard" th:disabled="disabled">
+                        <label class="form-check-label" for="inputAccountAddCard"
+                               th:text="'Add Card to this account?'"></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOpened">Created on</label>
+                        <input type="text" th:field="*{dateOpened}" name="dateOpened" class="form-control"
+                               id="dateOpened">
+                    </div>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('balance')}? 'text-danger'">
+                        <label for="inputBalance">Balance</label>
+                        <input type="text" th:field="*{balance}" name="balance" class="form-control" id="inputBalance">
+                        <small id="balanceHelp" th:each="error : ${#fields.errors('balance')}"
+                               th:text="${error}"></small>
+                    </div>
+                    <div class="form-group" th:classappend="${#fields.hasErrors('interestRate')}? 'text-danger'">
+                        <label for="inputInterestRate">Interest rate</label>
+                        <input type="text" th:field="*{interestRate}" name="interestRate" class="form-control"
+                               id="inputInterestRate">
+                        <small id="interestRateHelp" th:each="error : ${#fields.errors('interestRate')}"
+                               th:text="${error}"></small>
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn bg-info text-white mt-3">Delete bank account</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

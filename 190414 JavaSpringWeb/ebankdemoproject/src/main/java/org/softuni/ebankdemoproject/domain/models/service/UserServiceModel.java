@@ -1,7 +1,7 @@
 package org.softuni.ebankdemoproject.domain.models.service;
 
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
-import org.softuni.ebankdemoproject.domain.entities.bankaccounts.Beneficiary;
+import org.softuni.ebankdemoproject.domain.entities.users.Beneficiary;
 import org.softuni.ebankdemoproject.domain.entities.cards.Card;
 import org.softuni.ebankdemoproject.domain.entities.loans.Loan;
 

@@ -1,4 +1,4 @@
-package org.softuni.ebankdemoproject.domain.entities.bankaccounts;
+package org.softuni.ebankdemoproject.domain.entities.users;
 
 import org.iban4j.Iban;
 import org.softuni.ebankdemoproject.domain.entities.BaseEntity;

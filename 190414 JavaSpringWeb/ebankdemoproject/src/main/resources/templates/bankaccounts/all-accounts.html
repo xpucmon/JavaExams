@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment>
+    <table class="table table-hover mt-4" id="allUsers">
+        <thead>
+        <tr class="font-weight-bold">
+            <th scope="col">#</th>
+            <th scope="col">IBAN</th>
+            <th scope="col">Account type</th>
+            <th scope="col">Account status</th>
+            <th scope="col">Account owner</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="account, index : ${bankaccounts}">
+            <th scope="row" th:text="${index.count}"></th>
+            <td th:text="${account.getIban()}"></td>
+            <td th:text="${account.getAccountType()}"></td>
+            <td th:text="${account.getAccountStatus()}"></td>
+            <td th:text="${bankAccountOwner.getUsername()}" sec:authorize="hasAuthority('EMPLOYEE')"></td>
+            <td>
+                <a class="btn btn-outline-secondary"
+                   th:href="@{/bankaccounts/edit/{iban}(iban=${account.getIban()})}">Edit</a>
+            </td>
+            <td>
+                <a class="btn btn-danger" sec:authorize="hasAuthority('EMPLOYEE')"
+                   th:href="@{/bankaccounts/delete/{iban}(iban=${account.getIban()})}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>

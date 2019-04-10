@@ -1,5 +1,6 @@
 package org.softuni.ebankdemoproject.config;
 
+import org.softuni.ebankdemoproject.domain.entities.users.RoleConstant;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,9 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                     .authorizeRequests()
                     .antMatchers("/js/*", "/css/*").permitAll()
                     .antMatchers("/", "/users/login", "/users/register").anonymous()
+                    .antMatchers("/users/all-users", "/users/edit/*", "/users/delete/*",
+                            "/users/rolechange/**", "/confirmations/all").hasAuthority(RoleConstant.EMPLOYEE.name())
+                    .antMatchers("/bankaccounts/*").hasAuthority(RoleConstant.USER.name())
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

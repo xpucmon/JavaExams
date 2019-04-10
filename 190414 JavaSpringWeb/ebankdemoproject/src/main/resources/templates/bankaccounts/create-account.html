@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<form class="form w-50 mx-auto" th:action="@{/bankaccounts/create}" method="post" th:object="${bindingModel}">
+    <div class="form-group" th:classappend="${#fields.hasErrors('accountType')}? 'text-danger'">
+        <label for="inputBankAccountType">Bank Account Type</label>
+        <select class="form-control" th:field="*{accountType}" id="inputBankAccountType">
+            <option th:each="accountType : ${accountTypes}"
+                    th:value="${accountType}" th:text="${accountType.getFieldDescription()}"></option>
+        </select>
+        <small id="accountTypeHelp" th:each="error : ${#fields.errors('accountType')}" th:text="${error}"></small>
+    </div>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="inputAccountAddCard" th:disabled="disabled">
+        <label class="form-check-label" for="inputAccountAddCard" th:text="'Add Card to this account?'"></label>
+    </div>
+    <button type="submit" class="btn bg-info text-white mt-3">Create account</button>
+</form>

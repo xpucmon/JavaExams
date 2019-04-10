@@ -2,7 +2,6 @@ package org.softuni.ebankdemoproject.domain.entities.users;
 
 import org.softuni.ebankdemoproject.domain.entities.BaseEntity;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
-import org.softuni.ebankdemoproject.domain.entities.bankaccounts.Beneficiary;
 import org.softuni.ebankdemoproject.domain.entities.cards.Card;
 import org.softuni.ebankdemoproject.domain.entities.loans.Loan;
 import org.springframework.security.core.userdetails.UserDetails;

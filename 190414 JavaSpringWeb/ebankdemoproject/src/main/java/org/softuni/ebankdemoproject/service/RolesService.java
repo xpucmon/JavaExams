@@ -4,7 +4,7 @@ import org.softuni.ebankdemoproject.domain.models.service.RoleServiceModel;
 
 import java.util.Set;
 
-public interface RoleService {
+public interface RolesService {
 
     void seedRolesInDb();
 

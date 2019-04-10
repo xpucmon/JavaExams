@@ -77,9 +77,8 @@ public class UserController {
     @GetMapping("/profile")
     public ModelAndView profile(ModelAndView modelAndView, Principal principal) {
 
-        String name = principal.getName();
         UserEditBindingModel userEditBindingModel = this.modelMapper.map(this.usersService
-                .loadUserByUsername(name), UserEditBindingModel.class);
+                .loadUserByUsername(principal.getName()), UserEditBindingModel.class);
 
         modelAndView.addObject("bindingModel", userEditBindingModel);
 
@@ -172,7 +171,7 @@ public class UserController {
     }
 
     @PostMapping("/delete/{id}")
-    public ModelAndView deeteProfileConfirm(@PathVariable("id") String id, ModelAndView modelAndView) {
+    public ModelAndView deleteProfileConfirm(@PathVariable("id") String id, ModelAndView modelAndView) {
 
         try {
             this.usersService.deleteUser(id);

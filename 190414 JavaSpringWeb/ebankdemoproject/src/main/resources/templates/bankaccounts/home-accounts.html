@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+    <script th:src="@{/js/show.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/navbar}"></th:block>
+    </header>
+
+    <main>
+        <div class="container mt-4">
+            <fieldset class="form-group">
+                <div class="row">
+                    <h1 class="col-sm-6 pt-0" id="headline">Bank Accounts</h1>
+                    <div class="form-check form-check-inline col-sm-2">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="newAccountRadio"
+                               value="newBankAccount">
+                        <label class="form-check-label" for="newAccountRadio" th:text="'Create new account'"></label>
+                    </div>
+                    <div class="form-check form-check-inline col-sm-2">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="bankAccountsRadio"
+                               value="bankAccounts">
+                        <label class="form-check-label" for="bankAccountsRadio" th:text="'View your accounts'"></label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <hr class="mt-4"/>
+        <div class="container mt-4" id="placeholder">
+            <h4 th:class="text-center">Select what you would like to do!</h4>
+        </div>
+    </main>
+</div>
+</body>
+</html>

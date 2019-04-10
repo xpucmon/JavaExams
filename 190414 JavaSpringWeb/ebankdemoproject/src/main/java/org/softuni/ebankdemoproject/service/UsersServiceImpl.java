@@ -21,18 +21,18 @@ import java.util.stream.Collectors;
 @Service
 public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
-    private final RoleService roleService;
+    private final RolesService rolesService;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final Validator validator;
 
     @Autowired
     public UsersServiceImpl(UsersRepository usersRepository,
-                            RoleService roleService,
+                            RolesService rolesService,
                             ModelMapper modelMapper,
                             BCryptPasswordEncoder bCryptPasswordEncoder, Validator validator) {
         this.usersRepository = usersRepository;
-        this.roleService = roleService;
+        this.rolesService = rolesService;
         this.modelMapper = modelMapper;
         this.passwordEncoder = bCryptPasswordEncoder;
         this.validator = validator;
@@ -45,7 +45,7 @@ public class UsersServiceImpl implements UsersService {
         }
 
         if (this.usersRepository.count() == 0) {
-            this.roleService.seedRolesInDb();
+            this.rolesService.seedRolesInDb();
         }
         this.assignRolesToUser(userServiceModel);
 
@@ -93,14 +93,14 @@ public class UsersServiceImpl implements UsersService {
             userServiceModel.getAuthorities().clear();
 
             if (role.equals(RoleConstant.USER.name())) {
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.USER.name()));
+                userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.USER.name()));
             } else if (role.equals(RoleConstant.EMPLOYEE.name())) {
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.USER.name()));
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.EMPLOYEE.name()));
+                userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.USER.name()));
+                userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.EMPLOYEE.name()));
             } else if (role.equals(RoleConstant.ADMIN.name())) {
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.USER.name()));
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.EMPLOYEE.name()));
-                userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.ADMIN.name()));
+                userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.USER.name()));
+                userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.EMPLOYEE.name()));
+                userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.ADMIN.name()));
             }
         };
 
@@ -154,12 +154,12 @@ public class UsersServiceImpl implements UsersService {
 
     private void assignRolesToUser(UserServiceModel userServiceModel) {
         if (this.usersRepository.count() == 0) {
-            userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.ROOT.name()));
-            userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.ADMIN.name()));
-            userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.EMPLOYEE.name()));
-            userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.USER.name()));
+            userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.ROOT.name()));
+            userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.ADMIN.name()));
+            userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.EMPLOYEE.name()));
+            userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.USER.name()));
         } else {
-            userServiceModel.getAuthorities().add(this.roleService.findByAuthority(RoleConstant.USER.name()));
+            userServiceModel.getAuthorities().add(this.rolesService.findByAuthority(RoleConstant.USER.name()));
         }
     }
 }

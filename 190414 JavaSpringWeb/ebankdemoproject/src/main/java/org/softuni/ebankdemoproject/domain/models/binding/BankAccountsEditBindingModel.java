@@ -1,32 +1,30 @@
-package org.softuni.ebankdemoproject.domain.entities.bankaccounts;
+package org.softuni.ebankdemoproject.domain.models.binding;
 
-import org.softuni.ebankdemoproject.domain.entities.BaseEntity;
 import org.softuni.ebankdemoproject.domain.entities.cards.Card;
 import org.softuni.ebankdemoproject.domain.entities.transactions.Transaction;
-import org.softuni.ebankdemoproject.domain.entities.users.User;
+import org.softuni.ebankdemoproject.domain.models.service.BaseServiceModel;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name = "bank_accounts")
-public class BankAccount extends BaseEntity {
+public class BankAccountsEditBindingModel extends BaseServiceModel {
     private String iban;
-    private AccountType accountType;
-    private AccountStatus accountStatus;
-    private User accountOwner;
+    private String accountType;
+    private String accountStatus;
+    private String accountOwner;
     private LocalDateTime dateOpened;
     private BigDecimal balance;
     private BigDecimal interestRate;
     private Set<Card> cards;
     private Set<Transaction> transactions;
 
-    public BankAccount() {
+    public BankAccountsEditBindingModel() {
+        this.cards = new HashSet<>();
+        this.transactions = new HashSet<>();
     }
 
-    @Column(nullable = false, unique = true, updatable = false)
     public String getIban() {
         return iban;
     }
@@ -35,37 +33,30 @@ public class BankAccount extends BaseEntity {
         this.iban = iban;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "account_type")
-    public AccountType getAccountType() {
+    public String getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(AccountType accountType) {
+    public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "account_status")
-    public AccountStatus getAccountStatus() {
+    public String getAccountStatus() {
         return accountStatus;
     }
 
-    public void setAccountStatus(AccountStatus accountStatus) {
+    public void setAccountStatus(String accountStatus) {
         this.accountStatus = accountStatus;
     }
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "account_owner", referencedColumnName = "id", nullable = false)
-    public User getAccountOwner() {
+    public String getAccountOwner() {
         return accountOwner;
     }
 
-    public void setAccountOwner(User accountOwner) {
+    public void setAccountOwner(String accountOwner) {
         this.accountOwner = accountOwner;
     }
 
-    @Column(name = "date_opened", nullable = false)
     public LocalDateTime getDateOpened() {
         return dateOpened;
     }
@@ -74,7 +65,6 @@ public class BankAccount extends BaseEntity {
         this.dateOpened = dateOpened;
     }
 
-    @Column(nullable = false)
     public BigDecimal getBalance() {
         return balance;
     }
@@ -83,7 +73,6 @@ public class BankAccount extends BaseEntity {
         this.balance = balance;
     }
 
-    @Column(name = "interest_rate")
     public BigDecimal getInterestRate() {
         return interestRate;
     }
@@ -92,7 +81,6 @@ public class BankAccount extends BaseEntity {
         this.interestRate = interestRate;
     }
 
-    @OneToMany(targetEntity = Card.class)
     public Set<Card> getCards() {
         return cards;
     }
@@ -101,7 +89,6 @@ public class BankAccount extends BaseEntity {
         this.cards = cards;
     }
 
-    @OneToMany(targetEntity = Transaction.class, mappedBy = "bankAccount")
     public Set<Transaction> getTransactions() {
         return transactions;
     }
@@ -110,5 +97,3 @@ public class BankAccount extends BaseEntity {
         this.transactions = transactions;
     }
 }
-
-
