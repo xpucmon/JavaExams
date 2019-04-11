@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BankAccountsRepository extends JpaRepository<BankAccount, String> {
+    List<BankAccount> findAllByOrderByAccountOwner();
+
     Optional<BankAccount> findBankAccountByIban(String iban);
 
     List<BankAccount> findAllByAccountOwner(User user);

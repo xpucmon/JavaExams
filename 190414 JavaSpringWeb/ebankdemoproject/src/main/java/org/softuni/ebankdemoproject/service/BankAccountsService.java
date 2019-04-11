@@ -1,13 +1,14 @@
 package org.softuni.ebankdemoproject.service;
 
 import org.softuni.ebankdemoproject.domain.models.service.BankAccountsServiceModel;
-import org.softuni.ebankdemoproject.domain.models.view.BankAccountsViewModel;
 
 import java.util.List;
 
 public interface BankAccountsService {
 
     boolean createBankAccount(BankAccountsServiceModel bankAccountsServiceModel, String name);
+
+    List<BankAccountsServiceModel> listAllBankAccounts();
 
     List<BankAccountsServiceModel> listAllUserBankAccounts(String name);
 

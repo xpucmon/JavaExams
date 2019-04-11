@@ -52,6 +52,8 @@ public class BankAccountsServiceImpl implements BankAccountsService {
 
         try {
             this.bankAccountsRepository.save(toSave);
+            owner.getBankAccounts().add(toSave);
+            this.usersRepository.save(owner);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,12 +109,27 @@ public class BankAccountsServiceImpl implements BankAccountsService {
     }
 
     @Override
-    public void deleteBankAccount(String id) {
+    public void deleteBankAccount(String iban) {
+        BankAccount bankAccount = this.bankAccountsRepository.findBankAccountByIban(iban)
+                .orElseThrow(() -> new IllegalArgumentException("Bank account does not exist!"));
+
+        User owner = bankAccount.getAccountOwner();
+        String id = bankAccount.getId();
+
         try {
+            owner.getBankAccounts().remove(bankAccount);
+            this.usersRepository.save(owner);
             this.bankAccountsRepository.deleteById(id);
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<BankAccountsServiceModel> listAllBankAccounts() {
+        return Arrays.asList(this.modelMapper.map(
+                        this.bankAccountsRepository.findAllByOrderByAccountOwner(),
+                        BankAccountsServiceModel[].class));
     }
 
     @Override

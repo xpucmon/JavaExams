@@ -25,7 +25,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
                     .antMatchers("/", "/users/login", "/users/register").anonymous()
                     .antMatchers("/users/all-users", "/users/edit/*", "/users/delete/*",
                             "/users/rolechange/**", "/confirmations/all").hasAuthority(RoleConstant.EMPLOYEE.name())
-                    .antMatchers("/bankaccounts/*").hasAuthority(RoleConstant.USER.name())
+                    .antMatchers("/bankaccounts/all").hasAuthority(RoleConstant.EMPLOYEE.name())
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()

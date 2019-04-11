@@ -12,25 +12,31 @@
 
     <main>
         <div class="container mt-4">
+            <hr>
             <fieldset class="form-group">
                 <div class="row">
-                    <h1 class="col-sm-6 pt-0" id="headline">Bank Accounts</h1>
-                    <div class="form-check form-check-inline col-sm-2">
+                    <h1 class="col-sm-4 pt-0" id="headline">Bank accounts</h1>
+                    <div class="form-check form-check-inline ml-auto">
                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="newAccountRadio"
                                value="newBankAccount">
                         <label class="form-check-label" for="newAccountRadio" th:text="'Create new account'"></label>
                     </div>
-                    <div class="form-check form-check-inline col-sm-2">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="bankAccountsRadio"
-                               value="bankAccounts">
-                        <label class="form-check-label" for="bankAccountsRadio" th:text="'View your accounts'"></label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ownBankAccountsRadio"
+                               value="ownBankAccounts">
+                        <label class="form-check-label" for="ownBankAccountsRadio" th:text="'Own accounts'"></label>
+                    </div>
+                    <div class="form-check form-check-inline" sec:authorize="hasAuthority('EMPLOYEE')">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="allBankAccountsRadio"
+                               value="allBankAccounts">
+                        <label class="form-check-label" for="allBankAccountsRadio" th:text="'All bank accounts'"></label>
                     </div>
                 </div>
             </fieldset>
         </div>
-        <hr class="mt-4"/>
         <div class="container mt-4" id="placeholder">
-            <h4 th:class="text-center">Select what you would like to do!</h4>
+            <th:block th:include="~{bankaccounts/all-accounts}" sec:authorize="hasAuthority('EMPLOYEE')"></th:block>
+            <th:block th:include="~{bankaccounts/own-accounts}" sec:authorize="!hasAuthority('EMPLOYEE')"></th:block>
         </div>
     </main>
 </div>

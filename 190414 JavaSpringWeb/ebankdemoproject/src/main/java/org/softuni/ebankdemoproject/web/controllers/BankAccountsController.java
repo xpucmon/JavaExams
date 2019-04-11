@@ -3,6 +3,7 @@ package org.softuni.ebankdemoproject.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.AccountStatus;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.AccountType;
+import org.softuni.ebankdemoproject.domain.entities.users.User;
 import org.softuni.ebankdemoproject.domain.models.binding.BankAccountAddBindingModel;
 import org.softuni.ebankdemoproject.domain.models.binding.BankAccountsEditBindingModel;
 import org.softuni.ebankdemoproject.domain.models.service.BankAccountsServiceModel;
@@ -10,15 +11,13 @@ import org.softuni.ebankdemoproject.service.BankAccountsService;
 import org.softuni.ebankdemoproject.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.security.Principal;
 
 @Controller
@@ -38,11 +37,16 @@ public class BankAccountsController {
 
     @GetMapping("/home")
     @PreAuthorize(value = "isAuthenticated()")
-    public ModelAndView home(HttpSession session, Authentication principal, ModelAndView modelAndView) {
+    public ModelAndView home(Principal principal, ModelAndView modelAndView) {
 
-//        modelAndView.addObject("user", principal.getName());
+        modelAndView.addObject("bankAccountOwner",
+                this.usersService.loadUserByUsername(principal.getName()));
+        modelAndView.addObject("ownBankAccounts",
+                this.bankAccountsService.listAllUserBankAccounts(principal.getName()));
+        modelAndView.addObject("allBankAccounts",
+                this.bankAccountsService.listAllBankAccounts());
+
         modelAndView.setViewName("bankaccounts/home-accounts");
-
         return modelAndView;
     }
 
@@ -53,6 +57,7 @@ public class BankAccountsController {
 
         modelAndView.addObject("bindingModel", bankAccountAddBindingModel);
         modelAndView.addObject("accountTypes", AccountType.values());
+        modelAndView.addObject("accountOwners", this.usersService.listAllUsers());
 
         modelAndView.setViewName("bankaccounts/create-account");
         return modelAndView;
@@ -65,28 +70,31 @@ public class BankAccountsController {
 
         modelAndView.addObject("bindingModel", bankAccountAddBindingModel);
 
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("bankaccounts/create");
-            return modelAndView;
-        }
-
         BankAccountsServiceModel bankAccountsServiceModel = this.modelMapper
                 .map(bankAccountAddBindingModel, BankAccountsServiceModel.class);
 
-        this.bankAccountsService.createBankAccount(bankAccountsServiceModel, principal.getName());
+        this.bankAccountsService.createBankAccount(bankAccountsServiceModel, bankAccountAddBindingModel
+                .getAccountOwner() != null ? bankAccountAddBindingModel.getAccountOwner() : principal.getName());
 
-        modelAndView.setViewName("bankaccounts/home-accounts");
+        modelAndView.setViewName("redirect:/bankaccounts/home");
+        return modelAndView;
+    }
+
+    @GetMapping("/own")
+    public ModelAndView showOwnBankAccounts(Principal principal, ModelAndView modelAndView) {
+
+        modelAndView.addObject("bankAccountsOwner",
+                (User)this.usersService.loadUserByUsername(principal.getName()));
+
+        modelAndView.setViewName("bankaccounts/own-accounts");
         return modelAndView;
     }
 
     @GetMapping("/all")
-    public ModelAndView showBankAccounts(Principal principal, ModelAndView modelAndView) {
+    public ModelAndView showAllBankAccounts(ModelAndView modelAndView) {
 
-        modelAndView.addObject("bankAccountOwner",
-                this.usersService.loadUserByUsername(principal.getName()));
-
-        modelAndView.addObject("bankaccounts",
-                this.bankAccountsService.listAllUserBankAccounts(principal.getName()));
+        modelAndView.addObject("allBankAccounts",
+                this.bankAccountsService.listAllBankAccounts());
 
         modelAndView.setViewName("bankaccounts/all-accounts");
         return modelAndView;
@@ -94,7 +102,6 @@ public class BankAccountsController {
 
     @GetMapping("/edit/{iban}")
     public ModelAndView editBankAccount(@PathVariable("iban") String iban, ModelAndView modelAndView) {
-
         BankAccountsEditBindingModel bankAccountsEditBindingModel = this.modelMapper
                 .map(this.bankAccountsService.loadBankAccountByIban(iban), BankAccountsEditBindingModel.class);
 
@@ -141,11 +148,11 @@ public class BankAccountsController {
         return modelAndView;
     }
 
-    @PostMapping("/delete/{id}")
-    public ModelAndView deleteBankAccountConfirm(@PathVariable("id") String id, ModelAndView modelAndView) {
+    @PostMapping("/delete/{iban}")
+    public ModelAndView deleteBankAccountConfirm(@PathVariable("iban") String iban, ModelAndView modelAndView) {
 
         try {
-            this.bankAccountsService.deleteBankAccount(id);
+            this.bankAccountsService.deleteBankAccount(iban);
 
             modelAndView.setViewName("redirect:/bankaccounts/home");
         } catch (Exception e) {

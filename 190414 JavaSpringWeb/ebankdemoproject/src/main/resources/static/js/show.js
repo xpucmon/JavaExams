@@ -5,10 +5,26 @@ $(document).ready(() =>
     }));
 
 $(document).ready(() =>
-    $('#bankAccountsRadio').click(() => {
-        $('#headline').text("Your accounts");
+    $('#ownBankAccountsRadio').click(() => {
+        $('#headline').text("Own bank accounts");
+        $('#placeholder').empty().load('own');
+    }));
+
+$(document).ready(() =>
+    $('#allBankAccountsRadio').click(() => {
+        $('#headline').text("All bank accounts");
         $('#placeholder').empty().load('all');
     }));
+
+$(document).on('click', '#cancel', function(e) {
+    e.preventDefault();
+    parent.history.back();
+});
+//
+// $('button#cancel').on('click', function(e){
+//     e.preventDefault();
+//     window.history.back();
+// });
 
 //Using .ajax
 // $(document).ready(() =>

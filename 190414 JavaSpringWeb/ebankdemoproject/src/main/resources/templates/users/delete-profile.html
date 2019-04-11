@@ -13,12 +13,13 @@
         <div class="container mt-4">
             <h1 th:class="text-center" th:text="'Delete user account: ' + ${bindingModel.getUsername()}"></h1>
             <hr>
-            <form class="form w-50 mx-auto" th:method="post" th:object="${bindingModel}"
+            <form class="form w-75 mx-auto" th:method="post" th:object="${bindingModel}"
                   th:action="@{/users/delete/{id}(id=${bindingModel.getId()})}">
                 <fieldset th:disabled="disabled">
                     <th:block th:include="~{fragments/form-profile}"></th:block>
                 </fieldset>
-                <button type="submit" class="btn bg-info text-white">Delete user account</button>
+                <button type="submit" class="btn bg-info text-white mt-4">Delete user account</button>
+                <!--<button th:value="Back"  class="btn btn-outline-secondary mt-4 text-center">Cancel</button>-->
             </form>
         </div>
     </main>

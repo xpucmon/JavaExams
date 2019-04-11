@@ -1,0 +1,73 @@
+<div class="row mt-4">
+    <div class="col">
+        <label for="inputIban">IBAN</label>
+        <input type="text" th:field="*{iban}" name="iban" class="form-control" id="inputIban" readonly>
+    </div>
+    <div class="col">
+        <label for="dateOpened">Created on</label>
+        <input type="text" th:field="*{dateOpened}" name="dateOpened" class="form-control"
+               id="dateOpened" th:disabled="disabled">
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col" th:classappend="${#fields.hasErrors('accountType')}? 'text-danger'">
+        <label for="inputBankAccountType">Bank Account Type</label>
+        <select class="form-control" th:field="*{accountType}" id="inputBankAccountType">
+            <option th:each="accountType : ${accountTypes}"
+                    th:value="${accountType}" th:text="${accountType.getFieldDescription()}"></option>
+        </select>
+        <small id="accountTypeHelp" th:each="error : ${#fields.errors('accountType')}"
+               th:text="${error}"></small>
+    </div>
+    <div class="col" th:classappend="${#fields.hasErrors('accountStatus')}? 'text-danger'">
+        <label for="inputBankAccountStatus">Bank Account Status</label>
+        <select class="form-control" th:field="*{accountStatus}" id="inputBankAccountStatus">
+            <option th:each="accountStatus : ${accountStatuses}"
+                    th:value="${accountStatus}"
+                    th:text="${accountStatus.getFieldDescription()}"></option>
+        </select>
+        <small id="accountStatusHelp" th:each="error : ${#fields.errors('accountStatus')}"
+               th:text="${error}"></small>
+    </div>
+</div>
+<div class="col form-check text-left">
+    <input type="checkbox" class="form-check-input" id="inputAccountAddCard" th:disabled="disabled">
+    <label class="form-check-label" for="inputAccountAddCard"
+           th:text="'Add Card to this account?'"></label>
+</div>
+<fieldset sec:authorize="!hasAuthority('ADMIN')">
+    <div class="row mt-4">
+        <div class="col" th:classappend="${#fields.hasErrors('balance')}? 'text-danger'">
+            <label for="inputBalance">Balance</label>
+            <input type="text" th:field="*{balance}" name="balance" class="form-control"
+                   id="inputBalance" th:readonly="readonly">
+            <small id="balanceHelp" th:each="error : ${#fields.errors('balance')}"
+                   th:text="${error}"></small>
+        </div>
+        <div class="col" th:classappend="${#fields.hasErrors('interestRate')}? 'text-danger'">
+            <label for="inputInterestRate">Interest rate</label>
+            <input type="text" th:field="*{interestRate}" name="interestRate" class="form-control"
+                   id="inputInterestRate" th:readonly="readonly">
+            <small id="interestRateHelp" th:each="error : ${#fields.errors('interestRate')}"
+                   th:text="${error}"></small>
+        </div>
+    </div>
+</fieldset>
+<fieldset sec:authorize="hasAuthority('ADMIN')">
+    <div class="row mt-4">
+        <div class="col" th:classappend="${#fields.hasErrors('balance')}? 'text-danger'">
+            <label for="inputBalance">Balance</label>
+            <input type="text" th:field="*{balance}" name="balance" class="form-control"
+                   id="inputBalance">
+            <small id="balanceHelp" th:each="error : ${#fields.errors('balance')}"
+                   th:text="${error}"></small>
+        </div>
+        <div class="col" th:classappend="${#fields.hasErrors('interestRate')}? 'text-danger'">
+            <label for="inputInterestRate">Interest rate</label>
+            <input type="text" th:field="*{interestRate}" name="interestRate" class="form-control"
+                   id="inputInterestRate">
+            <small id="interestRateHelp" th:each="error : ${#fields.errors('interestRate')}"
+                   th:text="${error}"></small>
+        </div>
+    </div>
+</fieldset>

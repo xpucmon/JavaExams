@@ -11,12 +11,12 @@
 
     <main>
         <div class="container mt-4">
-            <h1 th:class="text-center" th:text="'Edit profile details for user: ' + ${bindingModel.getUsername()}"></h1>
+            <h1 th:class="text-center" th:text="'Edit profile for user: ' + ${bindingModel.getUsername()}"></h1>
             <hr>
-            <form class="form w-50 mx-auto" th:method="post" th:object="${bindingModel}"
+            <form class="form w-75 mx-auto" th:method="post" th:object="${bindingModel}"
                   th:action="@{/users/edit/{id}(id=${bindingModel.getId()})}">
                 <th:block th:include="~{fragments/form-profile}"></th:block>
-                <button type="submit" class="btn bg-info text-white">Confirm changes</button>
+                <button type="submit" class="btn bg-info text-white mt-4">Confirm changes</button>
             </form>
         </div>
     </main>

@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 
 public class BankAccountAddBindingModel {
     private String accountType;
+    private String accountOwner;
 
     @NotEmpty
     @NotNull
@@ -14,5 +15,15 @@ public class BankAccountAddBindingModel {
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
+    }
+
+    @NotEmpty
+    @NotNull
+    public String getAccountOwner() {
+        return accountOwner;
+    }
+
+    public void setAccountOwner(String accountOwner) {
+        this.accountOwner = accountOwner;
     }
 }
