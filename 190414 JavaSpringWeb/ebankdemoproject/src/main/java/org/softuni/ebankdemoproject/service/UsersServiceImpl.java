@@ -116,9 +116,9 @@ public class UsersServiceImpl implements UsersService {
         User user = this.usersRepository.findByUsername(userServiceModel.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("User not found!"));
 
-        user.setPassword(!"".equals(userServiceModel.getPassword()) ?
-                this.passwordEncoder.encode(userServiceModel.getPassword()) :
-                user.getPassword());
+        user.setPassword(!"".equals(userServiceModel.getPassword())
+                ? this.passwordEncoder.encode(userServiceModel.getPassword())
+                : user.getPassword());
         user.setFirstName(userServiceModel.getFirstName());
         user.setLastName(userServiceModel.getLastName());
         user.setEmail(userServiceModel.getEmail());
@@ -139,7 +139,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username){
         return this.usersRepository
                 .findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

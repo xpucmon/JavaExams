@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<div lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <hr class="mt-4"/>
+    <div th:class="text-center"></div>
+    <form class="form w-75 mx-auto" th:action="@{/transactions/initiate}" method="post" th:object="${bindingModel}">
+        <div class="row mt-4">
+            <div class="col" th:classappend="${#fields.hasErrors('bankAccount')}? 'text-danger'"
+                 sec:authorize="!hasAuthority('EMPLOYEE')">
+                <label for="inputOwnBankAccount">Bank Account</label>
+                <select class="form-control" th:field="*{bankAccount}" id="inputOwnBankAccount">
+                    <option th:each="ownBankAccount : ${ownBankAccounts}" th:class="text-center"
+                            th:value="${ownBankAccount.getIban()}" th:text="${ownBankAccount.getIban()}"></option>
+                </select>
+                <small id="ownBankAccountHelp" th:each="error : ${#fields.errors('bankAccount')}"
+                       th:text="${error}"></small>
+            </div>
+            <div class="col" th:classappend="${#fields.hasErrors('bankAccount')}? 'text-danger'"
+                 sec:authorize="hasAuthority('EMPLOYEE')">
+                <label for="inputUserBankAccount">Bank Account</label>
+                <select class="form-control" th:field="*{bankAccount}" id="inputUserBankAccount">
+                    <option th:each="userBankAccount : ${allBankAccounts}" th:class="text-center"
+                            th:value="${userBankAccount.getIban()}"
+                            th:text="${userBankAccount.getAccountOwner().getUsername()}
+                            + ' - ' + ${userBankAccount.getIban()}">
+                    </option>
+                </select>
+                <small id="userBankAccountHelp" th:each="error : ${#fields.errors('bankAccount')}"
+                       th:text="${error}"></small>
+            </div>
+            <div class="col" th:classappend="${#fields.hasErrors('amount')}? 'text-danger'">
+                <label for="inputAmount">Amount</label>
+                <input type="number" th:field="*{amount}" name="amount" class="form-control"
+                       id="inputAmount" placeholder="Enter amount">
+                <small id="inputAmountHelp" th:each="error : ${#fields.errors('amount')}"
+                       th:text="${error}"></small>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <label for="inputTransactionType">Transaction Type</label>
+                <div class="row ml-auto">
+                    <th:block th:each="transactionType : ${transactionTypes}" name="transactTypes">
+                        <div class="form-check form-check-inline"
+                             th:classappend="${#fields.hasErrors('transactionType')}? 'text-danger'">
+                            <input class="form-check-input" th:field="*{transactionType}" type="radio"
+                                   name="inputTransactionType" onclick="showRecipient(this)"
+                                   id="inputTransactionType" th:value="${transactionType}"
+                                   th:text="${transactionType.getFieldDescription()}"/>
+
+                        </div>
+                        <small id="transactionTypeHelp" th:each="error : ${#fields.errors('transactionType')}"
+                               th:text="${error}"></small>
+                    </th:block>
+                </div>
+                <!--<select class="form-control" th:field="*{transactionType}" id="inputTransactionType">-->
+                <!--<option th:each="transactionType : ${transactionTypes}" class="text-center"-->
+                <!--th:value="${transactionType}" th:text="${transactionType.getFieldDescription()}"></option>-->
+                <!--</select>-->
+                <!--<option th:each="transactionType : ${transactionTypes}" class="text-center"-->
+            </div>
+            <div style="display: none;" class="col" id="recipientIbanInput"
+                 th:classappend="${#fields.hasErrors('recipientIban')}? 'text-danger'">
+                <label for="inputRecipientIban">Recipient IBAN</label>
+                <input type="text" th:field="*{recipientIban}" name="recipientIban" class="form-control"
+                       id="inputRecipientIban" placeholder="Enter recipient's bank account IBAN">
+                <small id="inputRecipientIbanHelp" th:each="error : ${#fields.errors('recipientIban')}"
+                       th:text="${error}"></small>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div style="display: none;" class="col" id="recipientFirstNameInput"
+                 th:classappend="${#fields.hasErrors('recipientFirstName')}? 'text-danger'">
+                <label for="inputRecipientFirstName">Recipient First Name</label>
+                <input type="text" th:field="*{recipientFirstName}" name="firstName" class="form-control"
+                       id="inputRecipientFirstName" placeholder="Enter recipient's first name">
+                <small id="recipientFirstNameHelp" th:each="error : ${#fields.errors('recipientFirstName')}"
+                       th:text="${error}"></small>
+            </div>
+            <div style="display: none;" class="col" id="recipientLastNameInput"
+                 th:classappend="${#fields.hasErrors('recipientLastName')}? 'text-danger'">
+                <label for="inputRecipientLastName">Recipient Last Name</label>
+                <input type="text" th:field="*{recipientLastName}" name="recipientLastName" class="form-control"
+                       id="inputRecipientLastName" placeholder="Enter recipient's last name">
+                <small id="inputRecipientLastNameHelp" th:each="error : ${#fields.errors('recipientLastName')}"
+                       th:text="${error}"></small>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="inputIsRegular" onchange="showRegularities(this)">
+                    <label class="form-check-label" for="inputIsRegular"
+                           th:text="'Is this transaction regular?'"></label>
+                </div>
+            </div>
+            <div style="display: none;" class="col" id="regularityInput"
+                 th:classappend="${#fields.hasErrors('regularity')}? 'text-danger'">
+                <label for="inputRegularity">Regularity</label>
+                <select class="form-control" th:field="*{regularity}" id="inputRegularity">
+                    <option th:selected="selected" th:text="'--Select regularity--'" th:value="'#'"></option>
+                    <option th:each="regularity : ${regularities}" th:class="text-center"
+                            th:value="${regularity.toString()}" th:text="${regularity.toString()}"></option>
+                </select>
+                <small id="regularityHelp" th:each="error : ${#fields.errors('regularity')}"
+                       th:text="${error}"></small>
+            </div>
+        </div>
+        <button type="submit" class="btn bg-info text-white mt-4">Initiate transaction</button>
+    </form>
+</div>

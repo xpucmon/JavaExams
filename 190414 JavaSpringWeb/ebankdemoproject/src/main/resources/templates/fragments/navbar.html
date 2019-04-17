@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <th:block th:fragment>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-info rounded">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-info shadow-lg rounded">
         <th:block th:if="${#authorization.expression('isAnonymous()')}">
             <a class="navbar-brand text-white" th:href="@{/}">eBanking Demo</a>
         </th:block>
@@ -21,9 +21,38 @@
                         <a class="nav-link text-white" th:href="@{/users/register}">Register</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link text-white" th:href="@{/users/login}">Login</a>
+                        <a href="#" class="nav-link text-white" data-toggle="modal" data-target="#loginModal">Login</a>
                     </li>
                 </th:block>
+                <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-info">
+                                <h4 class="modal-title text-white" id="loginModalLabel">Login</h4>
+                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form class="form w-75 mx-auto" th:action="@{/users/login}" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label for="inputUserame">Username</label>
+                                        <input type="text" name="username" class="form-control" id="inputUserame"
+                                               placeholder="Enter username">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputPassword">Password</label>
+                                        <input type="password" name="password" class="form-control" id="inputPassword"
+                                               placeholder="Enter password">
+                                    </div>
+                                    <button type="submit" class="btn bg-info text-white">Login</button>
+                                    <!--<button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>-->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <th:block th:if="${#authorization.expression('isAuthenticated()')}">
                     <li class="nav-item active">
                         <a class="nav-link text-white" th:href="@{/home}">Home
@@ -40,7 +69,8 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" th:href="@{#}" id="bankAccountDropdown" role="button"
+                        <a class="nav-link dropdown-toggle text-white" th:href="@{#}" id="bankAccountDropdown"
+                           role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
                         <div class="dropdown-menu" aria-labelledby="bankAccountDropdown">
                             <a class="dropdown-item" th:href="@{/bankaccounts/home}">Bank Accounts</a>

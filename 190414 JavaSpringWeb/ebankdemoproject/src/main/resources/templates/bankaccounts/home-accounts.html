@@ -34,10 +34,7 @@
                 </div>
             </fieldset>
         </div>
-        <div class="container mt-4" id="placeholder">
-            <th:block th:include="~{bankaccounts/all-accounts}" sec:authorize="hasAuthority('EMPLOYEE')"></th:block>
-            <th:block th:include="~{bankaccounts/own-accounts}" sec:authorize="!hasAuthority('EMPLOYEE')"></th:block>
-        </div>
+        <div class="container mt-4" id="ba-placeholder"></div>
     </main>
 </div>
 </body>

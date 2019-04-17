@@ -42,10 +42,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ModelAndView registerConfirm(
-            @Valid
-            @ModelAttribute(name = "bindingModel") UserRegisterBindingModel bindingModel,
-            BindingResult bindingResult,
-            ModelAndView modelAndView) {
+            @Valid @ModelAttribute(name = "bindingModel") UserRegisterBindingModel bindingModel,
+            BindingResult bindingResult, ModelAndView modelAndView) {
 
         modelAndView.addObject("bindingModel", bindingModel);
 

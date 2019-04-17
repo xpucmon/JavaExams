@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+    <script th:src="@{/js/show.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/navbar}"></th:block>
+    </header>
+
+    <main>
+        <div class="container mt-4">
+            <hr>
+            <fieldset class="form-group">
+                <div class="row">
+                    <h1 class="col-sm-4 pt-0" id="headline">Transactions</h1>
+                    <div class="form-check form-check-inline ml-auto">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="newTransactionRadio"
+                               value="newTransaction">
+                        <label class="form-check-label" for="newTransactionRadio" th:text="'New transaction'"></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="transactionsRadio"
+                               value="transactions">
+                        <label class="form-check-label" for="transactionsRadio" th:text="'Transactions'"></label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="container mt-4" id="tr-placeholder"></div>
+    </main>
+</div>
+</body>
+</html>

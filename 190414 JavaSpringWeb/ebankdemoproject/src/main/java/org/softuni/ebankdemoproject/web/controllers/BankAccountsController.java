@@ -52,8 +52,7 @@ public class BankAccountsController {
 
     @GetMapping("/create")
     public ModelAndView createBankAccount(ModelAndView modelAndView,
-                                       @ModelAttribute(name = "bindingModel")
-                                               BankAccountAddBindingModel bankAccountAddBindingModel) {
+            @ModelAttribute(name = "bindingModel") BankAccountAddBindingModel bankAccountAddBindingModel) {
 
         modelAndView.addObject("bindingModel", bankAccountAddBindingModel);
         modelAndView.addObject("accountTypes", AccountType.values());
@@ -64,11 +63,16 @@ public class BankAccountsController {
     }
 
     @PostMapping("/create")
-    public ModelAndView createBankAccountConfirm( Principal principal,
+    public ModelAndView createBankAccountConfirm(
             @Valid @ModelAttribute(name = "bindingModel") BankAccountAddBindingModel bankAccountAddBindingModel,
-            BindingResult bindingResult, ModelAndView modelAndView) {
+            BindingResult bindingResult, Principal principal, ModelAndView modelAndView) {
 
         modelAndView.addObject("bindingModel", bankAccountAddBindingModel);
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("bankaccounts/create");
+            return modelAndView;
+        }
 
         BankAccountsServiceModel bankAccountsServiceModel = this.modelMapper
                 .map(bankAccountAddBindingModel, BankAccountsServiceModel.class);
@@ -115,9 +119,8 @@ public class BankAccountsController {
 
     @PostMapping("/edit/{iban}")
     public ModelAndView editBankAccountConfirm(
-            @PathVariable("iban") String iban,
             @Valid @ModelAttribute(name = "bindingModel") BankAccountsEditBindingModel bankAccountsEditBindingModel,
-            BindingResult bindingResult, ModelAndView modelAndView) {
+            BindingResult bindingResult, @PathVariable("iban") String iban, ModelAndView modelAndView) {
 
         modelAndView.addObject("bindingModel", bankAccountsEditBindingModel);
 

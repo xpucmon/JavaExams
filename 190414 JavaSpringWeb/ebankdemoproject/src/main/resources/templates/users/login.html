@@ -13,6 +13,14 @@
         <div class="container mt-4">
             <h1 th:class="text-center">Login</h1>
             <hr>
+            <th:block th:if="${param.error}">
+                <div class="text-center mb-3" style="color: darkred" th:text="|Login was not successful due to
+                ${session.SPRING_SECURITY_LAST_EXCEPTION.message}. Please try again!|">
+                </div>
+            </th:block>
+            <th:block th:if="${param.logout}">
+                <div class="text-center" style="color: lightseagreen;">You've successfully logged out!</div>
+            </th:block>
             <form class="form w-50 mx-auto" th:action="@{/users/login}" method="post">
                 <div class="form-group">
                     <label for="inputUserame">Username</label>

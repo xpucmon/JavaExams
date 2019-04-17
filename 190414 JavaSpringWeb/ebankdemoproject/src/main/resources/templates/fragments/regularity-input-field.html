@@ -1,0 +1,8 @@
+<label for="inputRegularity">Regularity</label>
+<select class="form-control" th:field="*{regularity}" id="inputRegularity">
+    <option th:selected="selected" th:text="'--Select regularity--'" th:value="'#'"></option>
+    <option th:each="regularity : ${regularities}" th:class="text-center"
+            th:value="${regularity.toString()}" th:text="${regularity.toString()}"></option>
+</select>
+<small id="regularityHelp" th:each="error : ${#fields.errors('regularity')}"
+       th:text="${error}"></small>

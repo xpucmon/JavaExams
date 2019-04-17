@@ -96,7 +96,7 @@ public class BankAccountsServiceImpl implements BankAccountsService {
     @Override
     public BankAccountsServiceModel editBankAccount(BankAccountsServiceModel bankAccountsServiceModel) {
         BankAccount bankAccount = this.bankAccountsRepository.findBankAccountByIban(bankAccountsServiceModel.getIban())
-                .orElseThrow(() -> new IllegalArgumentException("Bank account was not found!"));
+                .orElseThrow(() -> new IllegalArgumentException("This bank account does not exist!"));
 
         bankAccount.setAccountType(bankAccountsServiceModel.getAccountType());
         bankAccount.setAccountStatus(bankAccountsServiceModel.getAccountStatus());
@@ -111,7 +111,7 @@ public class BankAccountsServiceImpl implements BankAccountsService {
     @Override
     public void deleteBankAccount(String iban) {
         BankAccount bankAccount = this.bankAccountsRepository.findBankAccountByIban(iban)
-                .orElseThrow(() -> new IllegalArgumentException("Bank account does not exist!"));
+                .orElseThrow(() -> new IllegalArgumentException("This bank account does not exist!"));
 
         User owner = bankAccount.getAccountOwner();
         String id = bankAccount.getId();
@@ -135,7 +135,7 @@ public class BankAccountsServiceImpl implements BankAccountsService {
     @Override
     public BankAccountsServiceModel loadBankAccountByIban(String iban) {
         BankAccount bankAccountById = this.bankAccountsRepository.findBankAccountByIban(iban)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("This bank account does not exist!"));
 
         return this.modelMapper.map(bankAccountById, BankAccountsServiceModel.class);
     }
