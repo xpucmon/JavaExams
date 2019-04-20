@@ -52,7 +52,7 @@ public class BankAccountsController {
 
     @GetMapping("/create")
     public ModelAndView createBankAccount(ModelAndView modelAndView,
-            @ModelAttribute(name = "bindingModel") BankAccountAddBindingModel bankAccountAddBindingModel) {
+                                          @ModelAttribute(name = "bindingModel") BankAccountAddBindingModel bankAccountAddBindingModel) {
 
         modelAndView.addObject("bindingModel", bankAccountAddBindingModel);
         modelAndView.addObject("accountTypes", AccountType.values());
@@ -69,8 +69,8 @@ public class BankAccountsController {
 
         modelAndView.addObject("bindingModel", bankAccountAddBindingModel);
 
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("bankaccounts/create");
+        if (bindingResult.hasErrors() && bankAccountAddBindingModel.getAccountOwner() != null) {
+            modelAndView.setViewName("bankaccounts/create-account");
             return modelAndView;
         }
 
@@ -87,8 +87,9 @@ public class BankAccountsController {
     @GetMapping("/own")
     public ModelAndView showOwnBankAccounts(Principal principal, ModelAndView modelAndView) {
 
+        //TODO integrate the ViewModel instead of the owner's list
         modelAndView.addObject("bankAccountsOwner",
-                (User)this.usersService.loadUserByUsername(principal.getName()));
+                (User) this.usersService.loadUserByUsername(principal.getName()));
 
         modelAndView.setViewName("bankaccounts/own-accounts");
         return modelAndView;

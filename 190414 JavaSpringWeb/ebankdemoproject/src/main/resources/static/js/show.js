@@ -1,51 +1,49 @@
+$(document).ready(function () {
+    $('#ownBankAccountsRadio').attr('checked', true);
+    $('#ba-headline').text("Own bank accounts");
+    $('#ba-placeholder').empty().load('own');
+});
+
 $(document).ready(() =>
     $('#newAccountRadio').click(() => {
-        $('#headline').text("Create account");
+        $('#ba-headline').text("Create account");
         $('#ba-placeholder').empty().load('create');
     }));
 
 $(document).ready(() =>
     $('#ownBankAccountsRadio').click(() => {
-        $('#headline').text("Own bank accounts");
+        $('#ba-headline').text("Own bank accounts");
         $('#ba-placeholder').empty().load('own');
     }));
 
 $(document).ready(() =>
     $('#allBankAccountsRadio').click(() => {
-        $('#headline').text("All bank accounts");
+        $('#ba-headline').text("All bank accounts");
         $('#ba-placeholder').empty().load('all');
     }));
 
 $(document).ready(function () {
-    $('#ownBankAccountsRadio').attr('checked', true);
-    $('#headline').text("Own bank accounts");
-    $('#ba-placeholder').empty().load('own');
+    $('#transactionsRadio').attr('checked', true);
+    $('#tr-headline').text("Transaction");
+    $('#tr-placeholder').empty().load('own');
 });
-
 
 $(document).ready(() =>
     $('#newTransactionRadio').click(() => {
-        $('#headline').text("New transaction");
+        $('#tr-headline').text("New transaction");
         $('#tr-placeholder').empty().load('initiate');
     }));
 
-$(document).ready(function () {
-    $('#newTransactionRadio').attr('checked', true);
-    $('#headline').text("New transaction");
-    $('#tr-placeholder').empty().load('initiate');
-});
+$(document).ready(() =>
+    $('#transactionsRadio').click(() => {
+        $('#tr-headline').text("Transactions");
+        $('#tr-placeholder').empty().load('own');
+    }));
 
 $(document).on('click', '#cancel', function (e) {
     e.preventDefault();
     parent.history.back();
 });
-
-
-$(document).ready(() =>
-    $('#newTransactionRadio').click(() => {
-        $('#headline').text("New transaction");
-        $('#tr-placeholder').empty().load('initiate');
-    }));
 
 function showRecipient(currentObject) {
     if ($(currentObject).is(":checked") && $(currentObject).val() === "TRANSFER") {

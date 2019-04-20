@@ -1,5 +1,6 @@
 package org.softuni.ebankdemoproject.domain.models.binding;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -13,9 +14,10 @@ public class TransactionInitiateBindingModel {
     private BigDecimal amount;
     private BigDecimal transactionFee;
     private LocalDateTime transactionDateTime;
-    private boolean isRegular = false;
+    private boolean isRegular;
     private String regularity;
 
+    @NotNull
     public String getTransactionType() {
         return transactionType;
     }
@@ -32,6 +34,7 @@ public class TransactionInitiateBindingModel {
         this.accountOwner = accountOwner;
     }
 
+    @NotNull
     public String getBankAccount() {
         return bankAccount;
     }
@@ -64,6 +67,7 @@ public class TransactionInitiateBindingModel {
         this.recipientIban = recipientIban;
     }
 
+    @NotNull
     public BigDecimal getAmount() {
         return amount;
     }

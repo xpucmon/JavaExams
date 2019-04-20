@@ -8,7 +8,6 @@ import org.softuni.ebankdemoproject.domain.entities.users.User;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "bank_accounts")
@@ -99,15 +98,6 @@ public class BankAccount extends BaseEntity {
 
     public void setCards(Set<Card> cards) {
         this.cards = cards;
-    }
-
-    @OneToMany(targetEntity = Transaction.class, mappedBy = "bankAccount")
-    public Set<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(Set<Transaction> transactions) {
-        this.transactions = transactions;
     }
 }
 

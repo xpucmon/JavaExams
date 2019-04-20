@@ -2,10 +2,11 @@ package org.softuni.ebankdemoproject.web.controllers;
 
 import org.modelmapper.ModelMapper;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionRegularity;
+import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionStatus;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionType;
-import org.softuni.ebankdemoproject.domain.entities.users.User;
+import org.softuni.ebankdemoproject.domain.models.binding.TransactionEditBindingModel;
 import org.softuni.ebankdemoproject.domain.models.binding.TransactionInitiateBindingModel;
-import org.softuni.ebankdemoproject.domain.models.service.TransactionServiceModel;
+import org.softuni.ebankdemoproject.domain.models.view.TransactionViewModel;
 import org.softuni.ebankdemoproject.service.BankAccountsService;
 import org.softuni.ebankdemoproject.service.TransactionsService;
 import org.softuni.ebankdemoproject.service.UsersService;
@@ -57,12 +58,13 @@ public class TransactionsController {
                                                TransactionInitiateBindingModel transactionInitiateBindingModel) {
 
         modelAndView.addObject("bindingModel", transactionInitiateBindingModel);
+        modelAndView.addObject("transactionTypes",
+                this.transactionsService.listInitiateTransactionTypes());
+        modelAndView.addObject("regularities",  TransactionRegularity.values());
         modelAndView.addObject("ownBankAccounts",
                 this.bankAccountsService.listAllUserBankAccounts(principal.getName()));
         modelAndView.addObject("allBankAccounts",
                 this.bankAccountsService.listAllBankAccounts());
-        modelAndView.addObject("transactionTypes", this.transactionsService.listInitiateTransactionTypes());
-        modelAndView.addObject("regularities", TransactionRegularity.values());
 
         modelAndView.setViewName("transactions/initiate-transact");
         return modelAndView;
@@ -77,7 +79,7 @@ public class TransactionsController {
         modelAndView.addObject("bindingModel", transactionInitiateBindingModel);
 
         if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("transactions/initiate");
+            modelAndView.setViewName("transactions/initiate-transact");
             return modelAndView;
         }
 
@@ -87,18 +89,14 @@ public class TransactionsController {
         return modelAndView;
     }
 
-    @GetMapping("/has-regularity")
-    public ModelAndView showRegularityInputField(ModelAndView modelAndView) {
-
-        modelAndView.setViewName("fragments/regularity-input-field");
-        return modelAndView;
-    }
-
     @GetMapping("/own")
     public ModelAndView showOwnBankAccounts(Principal principal, ModelAndView modelAndView) {
 
-        modelAndView.addObject("transactionInitiator",
-                (User)this.usersService.loadUserByUsername(principal.getName()));
+        TransactionViewModel[] ownTransactions = this.modelMapper.map(this.transactionsService
+                .listAllUserTransactions(principal.getName()), TransactionViewModel[].class);
+
+        modelAndView.addObject("ownTransactions", ownTransactions);
+        modelAndView.addObject("notConfirmedStatus", TransactionStatus.NOT_CONFIRMED);
 
         modelAndView.setViewName("transactions/own-transacts");
         return modelAndView;
@@ -107,72 +105,101 @@ public class TransactionsController {
     @GetMapping("/all")
     public ModelAndView showAllBankAccounts(ModelAndView modelAndView) {
 
-        modelAndView.addObject("allTransactions",
-                this.transactionsService.listAllTransactions());
+        modelAndView.addObject("allTransactions", this.transactionsService.listAllTransactions());
+        modelAndView.addObject("notConfirmedStatus", TransactionStatus.NOT_CONFIRMED);
 
         modelAndView.setViewName("transactions/users-transacts");
         return modelAndView;
     }
 
-//    @GetMapping("/edit/{iban}")
-//    public ModelAndView editBankAccount(@PathVariable("iban") String iban, ModelAndView modelAndView) {
-//        BankAccountsEditBindingModel bankAccountsEditBindingModel = this.modelMapper
-//                .map(this.bankAccountsService.loadBankAccountByIban(iban), BankAccountsEditBindingModel.class);
-//
-//        modelAndView.addObject("bindingModel", bankAccountsEditBindingModel);
-//        modelAndView.addObject("accountTypes", AccountType.values());
-//        modelAndView.addObject("accountStatuses", AccountStatus.values());
-//
-//        modelAndView.setViewName("bankaccounts/edit-account");
-//        return modelAndView;
-//    }
-//
-//    @PostMapping("/edit/{iban}")
-//    public ModelAndView editBankAccountConfirm(
-//            @PathVariable("iban") String iban,
-//            @Valid @ModelAttribute(name = "bindingModel") BankAccountsEditBindingModel bankAccountsEditBindingModel,
-//            BindingResult bindingResult, ModelAndView modelAndView) {
-//
-//        modelAndView.addObject("bindingModel", bankAccountsEditBindingModel);
-//
-//        if (bindingResult.hasErrors()) {
-//            modelAndView.setViewName("bankaccounts/edit-account");
-//            return modelAndView;
-//        }
-//
-//        BankAccountsServiceModel bankAccountsServiceModel = this.modelMapper
-//                .map(bankAccountsEditBindingModel, BankAccountsServiceModel.class);
-//
-//        this.bankAccountsService.editBankAccount(bankAccountsServiceModel);
-//
-//        modelAndView.setViewName("redirect:/bankaccounts/home");
-//        return modelAndView;
-//    }
-//
-//    @GetMapping("/delete/{iban}")
-//    public ModelAndView delete(@PathVariable("iban") String iban, ModelAndView modelAndView) {
-//        BankAccountsEditBindingModel bankAccountsEditBindingModel = this.modelMapper
-//                .map(this.bankAccountsService.loadBankAccountByIban(iban), BankAccountsEditBindingModel.class);
-//
-//        modelAndView.addObject("bindingModel", bankAccountsEditBindingModel);
-//        modelAndView.addObject("accountTypes", AccountType.values());
-//        modelAndView.addObject("accountStatuses", AccountStatus.values());
-//
-//        modelAndView.setViewName("bankaccounts/delete-account");
-//        return modelAndView;
-//    }
-//
-//    @PostMapping("/delete/{iban}")
-//    public ModelAndView deleteBankAccountConfirm(@PathVariable("iban") String iban, ModelAndView modelAndView) {
-//
-//        try {
-//            this.bankAccountsService.deleteBankAccount(iban);
-//
-//            modelAndView.setViewName("redirect:/bankaccounts/home");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return modelAndView;
-//    }
+    @GetMapping("/edit/{id}")
+    public ModelAndView editTransaction(@PathVariable("id") String id, ModelAndView modelAndView) {
+
+        TransactionViewModel transactionViewModel = this.modelMapper
+                .map(this.transactionsService.loadTransactionById(id), TransactionViewModel.class);
+
+        modelAndView.addObject("bindingModel", transactionViewModel);
+        addEnumAndAccountsObjects(modelAndView, transactionViewModel);
+        modelAndView.addObject("transferType", TransactionType.TRANSFER);
+        modelAndView.addObject("notConfirmedStatus", TransactionStatus.NOT_CONFIRMED);
+
+        modelAndView.setViewName("transactions/edit-transaction");
+        return modelAndView;
+    }
+
+    private void addBindingModelAndEnumObjects(ModelAndView modelAndView, TransactionViewModel transactionViewModel) {
+
+    }
+
+    @PostMapping("/edit/{id}")
+    public ModelAndView editTransactionConfirm(
+            @PathVariable("id") String id,
+            @Valid @ModelAttribute(name = "bindingModel") TransactionEditBindingModel transactionEditBindingModel,
+            BindingResult bindingResult, ModelAndView modelAndView) {
+
+        modelAndView.addObject("bindingModel", transactionEditBindingModel);
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("transactions/edit-transaction");
+            return modelAndView;
+        }
+
+        this.transactionsService.editTransaction(transactionEditBindingModel);
+
+        modelAndView.setViewName("redirect:/transactions/home");
+        return modelAndView;
+    }
+
+    @GetMapping("/confirm/{id}")
+    public ModelAndView confirmTransaction(@PathVariable("id") String id, ModelAndView modelAndView) {
+        TransactionViewModel transactionViewModel = this.modelMapper
+                .map(this.transactionsService.loadTransactionById(id), TransactionViewModel.class);
+
+        modelAndView.addObject("bindingModel", transactionViewModel);
+        addEnumAndAccountsObjects(modelAndView, transactionViewModel);
+
+        modelAndView.setViewName("transactions/confirm-transaction");
+        return modelAndView;
+    }
+
+    @PostMapping("/confirm/{id}")
+    public ModelAndView confirmBankAccountTransactionConfirm(@PathVariable("id") String id, ModelAndView modelAndView){
+
+        this.transactionsService.confirmTransaction(id);
+
+        modelAndView.setViewName("redirect:/transactions/home");
+        return modelAndView;
+    }
+
+    @GetMapping("/cancel/{id}")
+    public ModelAndView cancelTransaction(@PathVariable("id") String id, ModelAndView modelAndView) {
+        TransactionViewModel transactionViewModel = this.modelMapper
+                .map(this.transactionsService.loadTransactionById(id), TransactionViewModel.class);
+
+        modelAndView.addObject("bindingModel", transactionViewModel);
+        addEnumAndAccountsObjects(modelAndView, transactionViewModel);
+        modelAndView.setViewName("transactions/cancel-transaction");
+        return modelAndView;
+    }
+
+    @PostMapping("/cancel/{id}")
+    public ModelAndView cancelBankAccountTransactionConfirm(@PathVariable("id") String id,
+                                                            ModelAndView modelAndView,
+                                                            Principal principal) {
+
+        this.transactionsService.cancelTransaction(id, principal.getName());
+
+        modelAndView.setViewName("redirect:/transactions/home");
+        return modelAndView;
+    }
+
+    private void addEnumAndAccountsObjects(ModelAndView modelAndView, TransactionViewModel transactionViewModel) {
+        modelAndView.addObject("transactionTypes", TransactionType.values());
+        modelAndView.addObject("transactionStatuses", TransactionStatus.values());
+        modelAndView.addObject("transactionRegularities", TransactionRegularity.values());
+
+        modelAndView.addObject("ownBankAccounts", this.bankAccountsService
+                .listAllUserBankAccounts(transactionViewModel.getBankAccount().getAccountOwner().getUsername()));
+
+    }
 }

@@ -1,14 +1,15 @@
-package org.softuni.ebankdemoproject.domain.models.service;
+package org.softuni.ebankdemoproject.domain.models.view;
 
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionRegularity;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionStatus;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TransactionServiceModel {
+public class TransactionViewModel {
     private String id;
     private TransactionType transactionType;
     private BankAccount bankAccount;
@@ -86,6 +87,7 @@ public class TransactionServiceModel {
         this.transactionFee = transactionFee;
     }
 
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     public LocalDateTime getTransactionDateTime() {
         return transactionDateTime;
     }

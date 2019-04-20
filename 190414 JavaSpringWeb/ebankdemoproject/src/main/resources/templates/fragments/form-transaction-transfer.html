@@ -1,0 +1,39 @@
+<div class="row mt-4">
+    <div class="col">
+        <label for="inputTransactionType">Transaction Type</label>
+        <select class="form-control" th:field="*{transactionType}" id="inputTransactionType"  th:disabled="disabled">
+            <option th:each="transactionType : ${transactionTypes}" class="text-center"
+                    th:value="${transactionType}"
+                    th:text="${transactionType.getFieldDescription()}"></option>
+        </select>
+    </div>
+    <div class="col" id="recipientIbanInput"
+         th:classappend="${#fields.hasErrors('recipientIban')}? 'text-danger'">
+        <label for="inputRecipientIban">Recipient IBAN</label>
+        <input type="text" th:field="*{recipientIban}" name="recipientIban" class="form-control"
+               id="inputRecipientIban">
+        <small id="inputRecipientIbanHelp" th:each="error : ${#fields.errors('recipientIban')}"
+               th:text="${error}"></small>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col" id="recipientFirstNameInput"
+         th:classappend="${#fields.hasErrors('recipientFirstName')}? 'text-danger'">
+        <label for="inputRecipientFirstName">Recipient First Name</label>
+        <input type="text" th:field="*{recipientFirstName}" name="firstName"
+               class="form-control"
+               id="inputRecipientFirstName">
+        <small id="recipientFirstNameHelp"
+               th:each="error : ${#fields.errors('recipientFirstName')}"
+               th:text="${error}"></small>
+    </div>
+    <div class="col" id="recipientLastNameInput"
+         th:classappend="${#fields.hasErrors('recipientLastName')}? 'text-danger'">
+        <label for="inputRecipientLastName">Recipient Last Name</label>
+        <input type="text" th:field="*{recipientLastName}" name="recipientLastName"
+               class="form-control" id="inputRecipientLastName">
+        <small id="inputRecipientLastNameHelp"
+               th:each="error : ${#fields.errors('recipientLastName')}"
+               th:text="${error}"></small>
+    </div>
+</div>

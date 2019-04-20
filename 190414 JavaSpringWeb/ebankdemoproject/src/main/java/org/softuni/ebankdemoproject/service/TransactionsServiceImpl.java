@@ -6,14 +6,15 @@ import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
 import org.softuni.ebankdemoproject.domain.entities.transactions.Transaction;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionStatus;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionType;
-import org.softuni.ebankdemoproject.domain.entities.users.User;
+import org.softuni.ebankdemoproject.domain.entities.users.RoleConstant;
+import org.softuni.ebankdemoproject.domain.models.binding.TransactionEditBindingModel;
 import org.softuni.ebankdemoproject.domain.models.binding.TransactionInitiateBindingModel;
+import org.softuni.ebankdemoproject.domain.models.service.BankAccountsServiceModel;
 import org.softuni.ebankdemoproject.domain.models.service.TransactionServiceModel;
-import org.softuni.ebankdemoproject.repository.BankAccountsRepository;
+import org.softuni.ebankdemoproject.domain.models.view.TransactionViewModel;
 import org.softuni.ebankdemoproject.repository.TransactionsRepository;
-import org.softuni.ebankdemoproject.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Validator;
@@ -24,56 +25,52 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.softuni.ebankdemoproject.domain.entities.transactions.TransactionType.*;
+
 @Service
-public class TransactionsServiceImpl implements TransactionsService{
+public class TransactionsServiceImpl implements TransactionsService {
     private final TransactionsRepository transactionsRepository;
-    private final BankAccountsRepository bankAccountsRepository;
-    private final UsersRepository usersRepository;
+    private final BankAccountsService bankAccountsService;
+    private final UsersService usersService;
     private final ModelMapper modelMapper;
     private final Validator validator;
 
     @Autowired
     public TransactionsServiceImpl(TransactionsRepository transactionsRepository,
-                                   BankAccountsRepository bankAccountsRepository,
-                                   UsersRepository usersRepository,
-                                   ModelMapper modelMapper,
+                                   BankAccountsService bankAccountsService, UsersService usersService, ModelMapper modelMapper,
                                    Validator validator) {
         this.transactionsRepository = transactionsRepository;
-        this.bankAccountsRepository = bankAccountsRepository;
-        this.usersRepository = usersRepository;
+        this.bankAccountsService = bankAccountsService;
+        this.usersService = usersService;
         this.modelMapper = modelMapper;
         this.validator = validator;
     }
 
     @Override
-    public boolean initiateTransaction(TransactionInitiateBindingModel transactionInitiateBindingModel){
+    public boolean initiateTransaction(TransactionInitiateBindingModel transactionInitiateBindingModel) {
         if (this.validator.validate(transactionInitiateBindingModel).size() != 0) {
             throw new IllegalArgumentException("Error during transaction initiation!");
         }
 
-        BankAccount bankAccount = this.bankAccountsRepository
-                .findBankAccountByIban(transactionInitiateBindingModel.getBankAccount())
-                .orElseThrow(() -> new IllegalArgumentException("No such active bank account!"));
+        BankAccountsServiceModel bankAccountsServiceModel = this.bankAccountsService
+                .loadBankAccountByIban(transactionInitiateBindingModel.getBankAccount());
 
-        if (!bankAccount.getAccountStatus().equals(AccountStatus.ACTIVE)){
+        if (!bankAccountsServiceModel.getAccountStatus().equals(AccountStatus.ACTIVE)) {
             throw new IllegalArgumentException("This bank account is not active");
         }
 
         TransactionServiceModel transactionServiceModel = this.modelMapper
                 .map(transactionInitiateBindingModel, TransactionServiceModel.class);
 
-        transactionServiceModel.setBankAccount(bankAccount);
+        transactionServiceModel.setBankAccount(this.modelMapper.map(bankAccountsServiceModel, BankAccount.class));
         transactionServiceModel.setTransactionFee(BigDecimal.ZERO);
         transactionServiceModel.setTransactionDateTime(LocalDateTime.now());
-        transactionServiceModel.setStatus(TransactionStatus.AWAITING_CONFIRMATION);
+        transactionServiceModel.setStatus(TransactionStatus.NOT_CONFIRMED);
 
         Transaction toSave = this.modelMapper.map(transactionServiceModel, Transaction.class);
 
         try {
             this.transactionsRepository.save(toSave);
-            //TODO add logic to deposit/withdrow/transfer money to BankAccount
-            bankAccount.getTransactions().add(toSave);
-            this.bankAccountsRepository.save(bankAccount);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,17 +80,18 @@ public class TransactionsServiceImpl implements TransactionsService{
 
     @Override
     public List<TransactionServiceModel> listAllUserTransactions(String name) {
-        User user = this.usersRepository.findByUsername(name)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
-        List<BankAccount> allAccountsByAccountOwner = this.bankAccountsRepository.findAllByAccountOwner(user);
-        List<Transaction> allTransactionsByAccountOwner = new ArrayList<>();
+        List<BankAccountsServiceModel> allAccountsByAccountOwner = this.bankAccountsService
+                .listAllUserBankAccounts(name);
 
-        for (BankAccount bankAccount : allAccountsByAccountOwner) {
-            allTransactionsByAccountOwner.addAll(this.transactionsRepository.findAllByBankAccount(bankAccount));
-        }
+        List<TransactionServiceModel> allTransactionsByAccountOwner = new ArrayList<>();
 
-        return Arrays.asList(this.modelMapper.map(allTransactionsByAccountOwner, TransactionServiceModel[].class));
+        allAccountsByAccountOwner
+                .forEach(b -> allTransactionsByAccountOwner.addAll(Arrays.asList(this.modelMapper
+                        .map(this.transactionsRepository.findAllByBankAccount(this.modelMapper
+                                .map(b, BankAccount.class)), TransactionServiceModel[].class))));
+
+        return allTransactionsByAccountOwner;
     }
 
     @Override
@@ -112,14 +110,25 @@ public class TransactionsServiceImpl implements TransactionsService{
     }
 
     @Override
-    public TransactionServiceModel editTransaction(TransactionServiceModel transactionServiceModel) {
+    public TransactionServiceModel editTransaction(TransactionEditBindingModel transactionEditBindingModel) {
+        TransactionServiceModel transactionServiceModel = this.modelMapper
+                .map(transactionEditBindingModel, TransactionServiceModel.class);
+
+        transactionServiceModel.setBankAccount(this.modelMapper.map(this.bankAccountsService
+                        .loadBankAccountByIban(transactionEditBindingModel.getBankAccount()), BankAccount.class));
+
         Transaction transactionById = this.transactionsRepository.findTransactionById(transactionServiceModel.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
 
         transactionById.setBankAccount(transactionServiceModel.getBankAccount());
-        transactionById.setTransactionFee(transactionServiceModel.getTransactionFee());
-        transactionById.setTransactionDateTime(transactionServiceModel.getTransactionDateTime());
-        transactionById.setStatus(transactionServiceModel.getStatus());
+        transactionById.setRegular(transactionServiceModel.isRegular());
+        transactionById.setRegularity(transactionServiceModel.getRegularity());
+
+        if (transactionServiceModel.getRecipientIban() != null){
+            transactionById.setRecipientIban(transactionServiceModel.getRecipientIban());
+            transactionById.setRecipientFirstName(transactionServiceModel.getRecipientFirstName());
+            transactionById.setRecipientLastName(transactionServiceModel.getRecipientLastName());
+        }
 
         Transaction saveTransaction = this.transactionsRepository.save(transactionById);
 
@@ -127,25 +136,92 @@ public class TransactionsServiceImpl implements TransactionsService{
     }
 
     @Override
-    public void deleteTransaction(String id) {
+    public void confirmTransaction(String id) {
         Transaction transactionById = this.transactionsRepository.findTransactionById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
 
-        BankAccount bankAccount = transactionById.getBankAccount();
+        TransactionServiceModel transactionServiceModel = this.modelMapper
+                .map(transactionById, TransactionServiceModel.class);
+
+        String iban = transactionServiceModel.getBankAccount().getIban();
+
+        BankAccountsServiceModel bankAccountsServiceModel = this.bankAccountsService
+                .loadBankAccountByIban(iban);
 
         try {
-            bankAccount.getTransactions().remove(transactionById);
-            this.bankAccountsRepository.save(bankAccount);
-            this.transactionsRepository.deleteById(id);
-        } catch (Exception e){
+            switch (transactionById.getTransactionType()) {
+                case DEPOSIT:
+                    depositMoney(bankAccountsServiceModel, transactionServiceModel);
+                    transactionById.setStatus(TransactionStatus.COMPLETED);
+                    break;
+                case WITHDRAW:
+                case CARD_PAYMENT:
+                    withdrawMoney(bankAccountsServiceModel, transactionServiceModel);
+                    transactionById.setStatus(TransactionStatus.COMPLETED);
+                    break;
+                case TRANSFER:
+                    withdrawMoney(bankAccountsServiceModel, transactionServiceModel);
+                    //TODO deposit the money to the Recipient's account
+                    depositMoney(bankAccountsServiceModel, transactionServiceModel);
+                    transactionById.setStatus(TransactionStatus.COMPLETED);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown operation");
+            }
+            this.transactionsRepository.save(transactionById);
+            this.bankAccountsService.editBankAccount(bankAccountsServiceModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void withdrawMoney(BankAccountsServiceModel bankAccountsServiceModel, TransactionServiceModel transactionServiceModel) {
+        if (transactionServiceModel.getAmount().add(transactionServiceModel.getTransactionFee())
+                .compareTo(bankAccountsServiceModel.getBalance()) <= 0) {
+            bankAccountsServiceModel.setBalance(bankAccountsServiceModel.getBalance()
+                    .subtract(transactionServiceModel.getAmount())
+                    .add(transactionServiceModel.getTransactionFee()));
+        } else {
+            throw new IllegalArgumentException("Not enough funds!");
+        }
+    }
+
+    private void depositMoney(BankAccountsServiceModel bankAccountsServiceModel, TransactionServiceModel transactionServiceModel) {
+        if (bankAccountsServiceModel.getBalance().add(transactionServiceModel.getAmount())
+                .compareTo(transactionServiceModel.getTransactionFee()) >= 0) {
+            bankAccountsServiceModel.setBalance(bankAccountsServiceModel.getBalance()
+                    .add(transactionServiceModel.getAmount())
+                    .subtract(transactionServiceModel.getTransactionFee()));
+        } else {
+            throw new IllegalArgumentException("Not enough funds to cover the fee!");
+        }
+    }
+
+    @Override
+    public void cancelTransaction(String id, String principalName) {
+        Transaction transactionById = this.transactionsRepository.findTransactionById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+
+        UserDetails userDetails = this.usersService.loadUserByUsername(principalName);
+
+        try {
+            if (!transactionById.getBankAccount().getAccountOwner().getUsername().equals(userDetails.getUsername())
+                    && userDetails.getAuthorities().contains(RoleConstant.EMPLOYEE)) {
+                transactionById.setStatus(TransactionStatus.REJECTED);
+            } else {
+                transactionById.setStatus(TransactionStatus.CANCELED);
+            }
+            this.transactionsRepository.save(transactionById);
+//                this.transactionsRepository.deleteById(id);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public List<TransactionType> listInitiateTransactionTypes() {
-        return Arrays.stream(TransactionType.values())
-                .filter(t -> !t.equals(TransactionType.CARD_PAYMENT))
+        return Arrays.stream(values())
+                .filter(t -> !t.equals(CARD_PAYMENT))
                 .collect(Collectors.toList());
     }
 }

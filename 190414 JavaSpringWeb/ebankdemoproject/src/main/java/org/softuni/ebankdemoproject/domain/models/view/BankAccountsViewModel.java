@@ -1,11 +1,15 @@
 package org.softuni.ebankdemoproject.domain.models.view;
 
+import java.math.BigDecimal;
+
 public class BankAccountsViewModel {
     private String id;
     private String iban;
     private String accountType;
     private String accountStatus;
     private String accountOwner;
+
+    private BigDecimal balance;
 
     public String getId() {
         return id;
@@ -45,5 +49,13 @@ public class BankAccountsViewModel {
 
     public void setAccountOwner(String accountOwner) {
         this.accountOwner = accountOwner;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }

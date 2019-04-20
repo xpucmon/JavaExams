@@ -1,13 +1,18 @@
 package org.softuni.ebankdemoproject.domain.entities.transactions;
 
 public enum TransactionRegularity {
-    DAILY,
-    WEEKLY,
-    MONTHLY,
-    YEARLY;
+    DAILY("Daily"),
+    WEEKLY("Weekly"),
+    MONTHLY("Monthly"),
+    YEARLY("Yearly");
 
-    @Override
-    public String toString() {
-        return name().charAt(0) + name().substring(1).toLowerCase();
+    private String fieldDescription;
+
+    private TransactionRegularity(String value) {
+        fieldDescription = value;
+    }
+
+    public String getFieldDescription() {
+        return fieldDescription;
     }
 }

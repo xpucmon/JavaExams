@@ -5,10 +5,11 @@
         <thead>
         <tr class="font-weight-bold">
             <th scope="col">#</th>
+            <th scope="col" sec:authorize="hasAuthority('EMPLOYEE')">Account owner</th>
             <th scope="col">IBAN</th>
             <th scope="col">Account type</th>
             <th scope="col">Account status</th>
-            <th scope="col" sec:authorize="hasAuthority('EMPLOYEE')">Account owner</th>
+            <th scope="col" th:class="text-right">Current balance</th>
             <th scope="col">Edit</th>
             <th scope="col" sec:authorize="hasAuthority('EMPLOYEE')">Delete</th>
         </tr>
@@ -16,10 +17,11 @@
         <tbody>
         <tr th:each="account, index : ${allBankAccounts}">
             <th scope="row" th:text="${index.count}"></th>
+            <td th:text="${account.getAccountOwner().getUsername()}" sec:authorize="hasAuthority('EMPLOYEE')"></td>
             <td th:text="${account.getIban()}"></td>
             <td th:text="${account.getAccountType()}"></td>
             <td th:text="${account.getAccountStatus()}"></td>
-            <td th:text="${account.getAccountOwner().getUsername()}" sec:authorize="hasAuthority('EMPLOYEE')"></td>
+            <td th:text="${account.getBalance()}" th:class="text-right"></td>
             <td>
                 <a class="btn btn-outline-secondary"
                    th:href="@{/bankaccounts/edit/{iban}(iban=${account.getIban()})}" th:text="'Edit'"></a>

@@ -47,17 +47,11 @@
                                    name="inputTransactionType" onclick="showRecipient(this)"
                                    id="inputTransactionType" th:value="${transactionType}"
                                    th:text="${transactionType.getFieldDescription()}"/>
-
                         </div>
                         <small id="transactionTypeHelp" th:each="error : ${#fields.errors('transactionType')}"
                                th:text="${error}"></small>
                     </th:block>
                 </div>
-                <!--<select class="form-control" th:field="*{transactionType}" id="inputTransactionType">-->
-                <!--<option th:each="transactionType : ${transactionTypes}" class="text-center"-->
-                <!--th:value="${transactionType}" th:text="${transactionType.getFieldDescription()}"></option>-->
-                <!--</select>-->
-                <!--<option th:each="transactionType : ${transactionTypes}" class="text-center"-->
             </div>
             <div style="display: none;" class="col" id="recipientIbanInput"
                  th:classappend="${#fields.hasErrors('recipientIban')}? 'text-danger'">
@@ -89,7 +83,8 @@
         <div class="row mt-4">
             <div class="col">
                 <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="inputIsRegular" onchange="showRegularities(this)">
+                    <input type="checkbox" th:field="*{regular}" class="form-check-input" id="inputIsRegular"
+                           onchange="showRegularities(this)">
                     <label class="form-check-label" for="inputIsRegular"
                            th:text="'Is this transaction regular?'"></label>
                 </div>
@@ -98,9 +93,8 @@
                  th:classappend="${#fields.hasErrors('regularity')}? 'text-danger'">
                 <label for="inputRegularity">Regularity</label>
                 <select class="form-control" th:field="*{regularity}" id="inputRegularity">
-                    <option th:selected="selected" th:text="'--Select regularity--'" th:value="'#'"></option>
                     <option th:each="regularity : ${regularities}" th:class="text-center"
-                            th:value="${regularity.toString()}" th:text="${regularity.toString()}"></option>
+                            th:value="${regularity}" th:text="${regularity.getFieldDescription()}"></option>
                 </select>
                 <small id="regularityHelp" th:each="error : ${#fields.errors('regularity')}"
                        th:text="${error}"></small>

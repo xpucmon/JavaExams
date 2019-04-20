@@ -69,15 +69,20 @@
                         </div>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" th:href="@{#}" id="bankAccountDropdown"
+                        <a class="nav-link dropdown-toggle text-white" th:href="@{#}" id="servicesDropdown"
                            role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
                         <div class="dropdown-menu" aria-labelledby="bankAccountDropdown">
-                            <a class="dropdown-item" th:href="@{/bankaccounts/home}">Bank Accounts</a>
-                            <a class="dropdown-item" th:href="@{/cards/home}">Cards</a>
-                            <a class="dropdown-item" th:href="@{/loans/home}">Loans</a>
-                            <a class="dropdown-item" th:href="@{/transactions/home}">Transactions</a>
-                            <a class="dropdown-item" th:href="@{/beneficiaries/home}">Beneficiaries</a>
+                            <a class="dropdown-item" th:href="@{/bankaccounts/home}" th:text="'Bank Accounts'"
+                               id="bankAccountDropdown"></a>
+                            <a class="dropdown-item" th:href="@{/cards/home}" th:text="'Cards'"
+                               id="cardsDropdown"></a>
+                            <a class="dropdown-item" th:href="@{/loans/home}" th:text="'Loans'"
+                               id="loansDropdown"></a>
+                            <a class="dropdown-item" th:href="@{/transactions/home}" th:text="'Transactions'"
+                               id="transactionDropdown"></a>
+                            <a class="dropdown-item" th:href="@{/beneficiaries/home}" th:text="'Beneficiaries'"
+                               id="beneficiariesDropdown"></a>
                         </div>
                     </li>
                     <th:block sec:authorize="hasAuthority('EMPLOYEE')">

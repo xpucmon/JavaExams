@@ -1,17 +1,15 @@
-package org.softuni.ebankdemoproject.domain.models.service;
+package org.softuni.ebankdemoproject.domain.models.binding;
 
-import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionRegularity;
 import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionStatus;
-import org.softuni.ebankdemoproject.domain.entities.transactions.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class TransactionServiceModel {
+public class TransactionEditBindingModel {
     private String id;
-    private TransactionType transactionType;
-    private BankAccount bankAccount;
+    private String transactionType;
+    private String bankAccount;
     private String recipientFirstName;
     private String recipientLastName;
     private String recipientIban;
@@ -19,8 +17,8 @@ public class TransactionServiceModel {
     private BigDecimal transactionFee;
     private LocalDateTime transactionDateTime;
     private boolean isRegular;
-    private TransactionRegularity regularity;
-    private TransactionStatus status;
+    private String regularity;
+    private String status;
 
     public String getId() {
         return id;
@@ -30,19 +28,19 @@ public class TransactionServiceModel {
         this.id = id;
     }
 
-    public TransactionType getTransactionType() {
+    public String getTransactionType() {
         return transactionType;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
+    public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
     }
 
-    public BankAccount getBankAccount() {
+    public String getBankAccount() {
         return bankAccount;
     }
 
-    public void setBankAccount(BankAccount bankAccount) {
+    public void setBankAccount(String bankAccount) {
         this.bankAccount = bankAccount;
     }
 
@@ -102,19 +100,19 @@ public class TransactionServiceModel {
         isRegular = regular;
     }
 
-    public TransactionRegularity getRegularity() {
+    public String getRegularity() {
         return regularity;
     }
 
-    public void setRegularity(TransactionRegularity regularity) {
+    public void setRegularity(String regularity) {
         this.regularity = regularity;
     }
 
-    public TransactionStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(TransactionStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

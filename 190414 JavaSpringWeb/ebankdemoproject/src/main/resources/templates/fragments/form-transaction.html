@@ -1,0 +1,48 @@
+<div class="row mt-4">
+    <div class="col" th:classappend="${#fields.hasErrors('bankAccount')}? 'text-danger'">
+        <label for="inputUserBankAccount" th:text="'Username - Bank account IBAN'"></label>
+        <select class="form-control" th:field="*{bankAccount}" id="inputUserBankAccount">
+            <option th:each="userBankAccount : ${ownBankAccounts}" th:class="text-center"
+                    th:value="${userBankAccount.getIban()}"
+                    th:text="${userBankAccount.getAccountOwner().getUsername()}
+                            + ' - ' + ${userBankAccount.getIban()}">
+            </option>
+        </select>
+        <small id="userBankAccountHelp" th:each="error : ${#fields.errors('bankAccount')}"
+               th:text="${error}"></small>
+    </div>
+    <div class="col" th:classappend="${#fields.hasErrors('amount')}? 'text-danger'">
+        <label for="inputAmount">Amount</label>
+        <input type="number" th:field="*{amount}" name="amount" class="form-control"
+               id="inputAmount" placeholder="Enter amount">
+        <small id="inputAmountHelp" th:each="error : ${#fields.errors('amount')}"
+               th:text="${error}"></small>
+    </div>
+</div>
+<fieldset th:if="${bindingModel.getTransactionType().equals(transferType)}">
+    <th:block th:include="~{fragments/form-transaction-transfer}"></th:block>
+</fieldset>
+<fieldset th:if="!${bindingModel.getTransactionType().equals(transferType)}" th:disabled="disabled">
+    <th:block th:include="~{fragments/form-transaction-transfer}"></th:block>
+</fieldset>
+<div class="row mt-4">
+    <div class="col">
+        <div class="form-check">
+            <input type="checkbox" th:field="*{regular}" class="form-check-input"
+                   id="inputIsRegular"
+                   onchange="toggleRegularities(this)">
+            <label class="form-check-label" for="inputIsRegular"
+                   th:text="'Is this transaction regular?'"></label>
+        </div>
+    </div>
+    <div class="col" id="regularityInput"
+         th:classappend="${#fields.hasErrors('regularity')}? 'text-danger'">
+        <label for="inputRegularity">Regularity</label>
+        <select class="form-control" th:field="*{regularity}" id="inputRegularity">
+            <option th:selected="selected" th:text="'--Select regularity--'"
+                    th:value="'#'"></option>
+            <option th:each="regularity : ${transactionRegularities}" th:class="text-center"
+                    th:value="${regularity}" th:text="${regularity.getFieldDescription()}"></option>
+        </select>
+    </div>
+</div>
