@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <th:block th:fragment>
     <table class="table table-hover mt-4" id="transactionsTable"
            data-filter-control="true" data-filter-show-clear="true">
         <thead>
         <tr class="font-weight-bold">
             <th scope="col">#</th>
+            <th scope="col" data-field="accOwner" data-filter-control="input">Acc. owner</th>
             <th scope="col" data-field="bankAccount" data-filter-control="select">Bank account</th>
             <th scope="col" data-field="type" data-filter-control="select">Type</th>
             <th scope="col" data-field="amount" th:class="text-right" data-filter-control="input">Amount</th>
@@ -16,8 +18,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="transaction, index : ${ownTransactions}">
+        <tr th:each="transaction, index : ${allTransactions}">
             <td scope="row" th:text="${index.count}"></td>
+            <td th:text="${transaction.getBankAccount().getAccountOwner().getUsername()}"></td>
             <td th:text="${transaction.getBankAccount().getIban()}"></td>
             <td th:text="${transaction.getTransactionType().getFieldDescription()}"></td>
             <td th:class="text-right" th:text="${transaction.getAmount()}"></td>

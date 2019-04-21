@@ -1,3 +1,4 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <div class="row mt-4">
     <div class="col" th:classappend="${#fields.hasErrors('bankAccount')}? 'text-danger'">
         <label for="inputUserBankAccount" th:text="'Username - Bank account IBAN'"></label>
@@ -29,18 +30,15 @@
     <div class="col">
         <div class="form-check">
             <input type="checkbox" th:field="*{regular}" class="form-check-input"
-                   id="inputIsRegular"
-                   onchange="toggleRegularities(this)">
+                   id="inputIsRegular" onchange="showRegularities(this)">
             <label class="form-check-label" for="inputIsRegular"
                    th:text="'Is this transaction regular?'"></label>
         </div>
     </div>
-    <div class="col" id="regularityInput"
-         th:classappend="${#fields.hasErrors('regularity')}? 'text-danger'">
+    <div class="col" id="regularityInput" th:classappend="${#fields.hasErrors('regularity')}? 'text-danger'">
         <label for="inputRegularity">Regularity</label>
         <select class="form-control" th:field="*{regularity}" id="inputRegularity">
-            <option th:selected="selected" th:text="'--Select regularity--'"
-                    th:value="'#'"></option>
+            <!--<option th:selected="selected" th:text="'&#45;&#45;Select regularity&#45;&#45;'" th:value="''"></option>-->
             <option th:each="regularity : ${transactionRegularities}" th:class="text-center"
                     th:value="${regularity}" th:text="${regularity.getFieldDescription()}"></option>
         </select>

@@ -23,7 +23,7 @@ $(document).ready(() =>
     }));
 
 $(document).ready(function () {
-    $('#transactionsRadio').attr('checked', true);
+    $('#ownTransactionsRadio').attr('checked', true);
     $('#tr-headline').text("Transaction");
     $('#tr-placeholder').empty().load('own');
 });
@@ -35,9 +35,21 @@ $(document).ready(() =>
     }));
 
 $(document).ready(() =>
-    $('#transactionsRadio').click(() => {
-        $('#tr-headline').text("Transactions");
+    $('#ownTransactionsRadio').click(() => {
+        $('#tr-headline').text("Own transactions");
         $('#tr-placeholder').empty().load('own');
+    }));
+
+$(document).ready(() =>
+    $('#allTransactionsRadio').click(() => {
+        $('#tr-headline').text("All transactions");
+        $('#tr-placeholder').empty().load('all');
+    }));
+
+$(document).ready(() =>
+    $('#allTransactionsRadio').click(() => {
+        $('#tr-headline').text("All transactions");
+        $('#tr-placeholder').empty().load('all');
     }));
 
 $(document).on('click', '#cancel', function (e) {
@@ -62,6 +74,7 @@ function showRegularities(currentObject) {
         $('#regularityInput').show().focus();
     } else {
         $('#regularityInput').hide();
+        $('#inputRegularity').val('');
     }
 }
 

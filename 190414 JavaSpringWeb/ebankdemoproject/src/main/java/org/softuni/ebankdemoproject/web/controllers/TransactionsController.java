@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/transactions")
@@ -89,26 +90,29 @@ public class TransactionsController {
         return modelAndView;
     }
 
+    @GetMapping("/all")
+    public ModelAndView showAllTransactions(ModelAndView modelAndView) {
+
+        modelAndView.addObject("accountOwners", this.usersService.listAllUsers());
+        modelAndView.addObject("allTransactions", this.transactionsService.listAllTransactions());
+        modelAndView.addObject("notConfirmedStatus", TransactionStatus.NOT_CONFIRMED);
+        modelAndView.addObject("ongoingRecurrent", TransactionStatus.ONGOING_RECURRENT);
+
+        modelAndView.setViewName("transactions/all-transacts");
+        return modelAndView;
+    }
+
     @GetMapping("/own")
-    public ModelAndView showOwnBankAccounts(Principal principal, ModelAndView modelAndView) {
+    public ModelAndView showOwnTransactions(Principal principal, ModelAndView modelAndView) {
 
         TransactionViewModel[] ownTransactions = this.modelMapper.map(this.transactionsService
                 .listAllUserTransactions(principal.getName()), TransactionViewModel[].class);
 
         modelAndView.addObject("ownTransactions", ownTransactions);
         modelAndView.addObject("notConfirmedStatus", TransactionStatus.NOT_CONFIRMED);
+        modelAndView.addObject("ongoingRecurrent", TransactionStatus.ONGOING_RECURRENT);
 
         modelAndView.setViewName("transactions/own-transacts");
-        return modelAndView;
-    }
-
-    @GetMapping("/all")
-    public ModelAndView showAllBankAccounts(ModelAndView modelAndView) {
-
-        modelAndView.addObject("allTransactions", this.transactionsService.listAllTransactions());
-        modelAndView.addObject("notConfirmedStatus", TransactionStatus.NOT_CONFIRMED);
-
-        modelAndView.setViewName("transactions/users-transacts");
         return modelAndView;
     }
 
@@ -144,6 +148,7 @@ public class TransactionsController {
             return modelAndView;
         }
 
+        //TODO does not update price changes
         this.transactionsService.editTransaction(transactionEditBindingModel);
 
         modelAndView.setViewName("redirect:/transactions/home");

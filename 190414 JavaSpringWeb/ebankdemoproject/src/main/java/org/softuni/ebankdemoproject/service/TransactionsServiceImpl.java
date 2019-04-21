@@ -11,7 +11,6 @@ import org.softuni.ebankdemoproject.domain.models.binding.TransactionEditBinding
 import org.softuni.ebankdemoproject.domain.models.binding.TransactionInitiateBindingModel;
 import org.softuni.ebankdemoproject.domain.models.service.BankAccountsServiceModel;
 import org.softuni.ebankdemoproject.domain.models.service.TransactionServiceModel;
-import org.softuni.ebankdemoproject.domain.models.view.TransactionViewModel;
 import org.softuni.ebankdemoproject.repository.TransactionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -88,8 +87,8 @@ public class TransactionsServiceImpl implements TransactionsService {
 
         allAccountsByAccountOwner
                 .forEach(b -> allTransactionsByAccountOwner.addAll(Arrays.asList(this.modelMapper
-                        .map(this.transactionsRepository.findAllByBankAccount(this.modelMapper
-                                .map(b, BankAccount.class)), TransactionServiceModel[].class))));
+                        .map(this.transactionsRepository.findAllByBankAccountOrderByTransactionDateTimeDesc(
+                                this.modelMapper.map(b, BankAccount.class)), TransactionServiceModel[].class))));
 
         return allTransactionsByAccountOwner;
     }
@@ -121,6 +120,7 @@ public class TransactionsServiceImpl implements TransactionsService {
                 .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
 
         transactionById.setBankAccount(transactionServiceModel.getBankAccount());
+        transactionById.setAmount(transactionServiceModel.getAmount());
         transactionById.setRegular(transactionServiceModel.isRegular());
         transactionById.setRegularity(transactionServiceModel.getRegularity());
 
@@ -152,18 +152,20 @@ public class TransactionsServiceImpl implements TransactionsService {
             switch (transactionById.getTransactionType()) {
                 case DEPOSIT:
                     depositMoney(bankAccountsServiceModel, transactionServiceModel);
-                    transactionById.setStatus(TransactionStatus.COMPLETED);
+                    assignCompletionStatus(transactionById, transactionServiceModel);
                     break;
                 case WITHDRAW:
                 case CARD_PAYMENT:
                     withdrawMoney(bankAccountsServiceModel, transactionServiceModel);
-                    transactionById.setStatus(TransactionStatus.COMPLETED);
+                    assignCompletionStatus(transactionById, transactionServiceModel);
                     break;
                 case TRANSFER:
                     withdrawMoney(bankAccountsServiceModel, transactionServiceModel);
-                    //TODO deposit the money to the Recipient's account
-                    depositMoney(bankAccountsServiceModel, transactionServiceModel);
-                    transactionById.setStatus(TransactionStatus.COMPLETED);
+                    //TODO check money deposited to the Recipient's account / if IBAN does not exist in DB???
+                    if (this.bankAccountsService.loadBankAccountByIban(transactionServiceModel.getRecipientIban()) != null){
+                        depositMoney(bankAccountsServiceModel, transactionServiceModel);
+                    }
+                    assignCompletionStatus(transactionById, transactionServiceModel);
                     break;
                 default:
                     throw new IllegalArgumentException("Unknown operation");
@@ -194,6 +196,14 @@ public class TransactionsServiceImpl implements TransactionsService {
                     .subtract(transactionServiceModel.getTransactionFee()));
         } else {
             throw new IllegalArgumentException("Not enough funds to cover the fee!");
+        }
+    }
+
+    private void assignCompletionStatus(Transaction transactionById, TransactionServiceModel transactionServiceModel) {
+        if (transactionServiceModel.isRegular()) {
+            transactionById.setStatus(TransactionStatus.ONGOING_RECURRENT);
+        } else {
+            transactionById.setStatus(TransactionStatus.COMPLETED);
         }
     }
 

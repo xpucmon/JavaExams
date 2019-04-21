@@ -10,7 +10,8 @@ import java.util.Optional;
 
 @Repository
 public interface TransactionsRepository extends JpaRepository<Transaction, String> {
-    List<Transaction> findAllByBankAccount(BankAccount bankAccount);
+
+    List<Transaction> findAllByBankAccountOrderByTransactionDateTimeDesc(BankAccount bankAccount);
 
     Optional<Transaction> findTransactionById(String id);
 

@@ -5,7 +5,8 @@ public enum TransactionStatus {
     CANCELED("Canceled"),
     PENDING_APPROVAL("Pending approval"),
     REJECTED("Rejected"),
-    COMPLETED("Completed");
+    COMPLETED("Completed"),
+    ONGOING_RECURRENT("Ongoing recurrent");
 
     private String fieldDescription;
 

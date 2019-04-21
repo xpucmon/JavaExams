@@ -93,6 +93,7 @@
                  th:classappend="${#fields.hasErrors('regularity')}? 'text-danger'">
                 <label for="inputRegularity">Regularity</label>
                 <select class="form-control" th:field="*{regularity}" id="inputRegularity">
+                    <!--<option th:selected="selected" th:text="'&#45;&#45;Select regularity&#45;&#45;'" th:value="''"></option>-->
                     <option th:each="regularity : ${regularities}" th:class="text-center"
                             th:value="${regularity}" th:text="${regularity.getFieldDescription()}"></option>
                 </select>
