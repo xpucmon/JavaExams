@@ -52,7 +52,6 @@ public class BankAccountsServiceImpl implements BankAccountsService {
 
         try {
             this.bankAccountsRepository.save(toSave);
-            owner.getBankAccounts().add(toSave);
             this.usersRepository.save(owner);
             return true;
         } catch (Exception e) {
@@ -84,7 +83,7 @@ public class BankAccountsServiceImpl implements BankAccountsService {
     }
 
     @Override
-    public List<BankAccountsServiceModel> listAllUserBankAccounts(String name) {
+    public List<BankAccountsServiceModel> listUserBankAccounts(String name) {
         User user = this.usersRepository.findByUsername(name)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
@@ -113,13 +112,9 @@ public class BankAccountsServiceImpl implements BankAccountsService {
         BankAccount bankAccount = this.bankAccountsRepository.findBankAccountByIban(iban)
                 .orElseThrow(() -> new IllegalArgumentException("This bank account does not exist!"));
 
-        User owner = bankAccount.getAccountOwner();
-        String id = bankAccount.getId();
-
         try {
-            owner.getBankAccounts().remove(bankAccount);
-            this.usersRepository.save(owner);
-            this.bankAccountsRepository.deleteById(id);
+            this.usersRepository.save(bankAccount.getAccountOwner());
+            this.bankAccountsRepository.deleteById(bankAccount.getId());
         } catch (Exception e){
             e.printStackTrace();
         }

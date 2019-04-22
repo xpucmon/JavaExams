@@ -26,7 +26,7 @@
                                value="ownTransactions">
                         <label class="form-check-label" for="ownTransactionsRadio" th:text="'Own transactions'"></label>
                     </div>
-                    <div class="form-check form-check-inline">
+                    <div class="form-check form-check-inline" sec:authorize="hasAuthority('EMPLOYEE')">
                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="allTransactionsRadio"
                                value="allTransactions">
                         <label class="form-check-label" for="allTransactionsRadio" th:text="'All transactions'"></label>

@@ -38,7 +38,7 @@
     <div class="col" id="regularityInput" th:classappend="${#fields.hasErrors('regularity')}? 'text-danger'">
         <label for="inputRegularity">Regularity</label>
         <select class="form-control" th:field="*{regularity}" id="inputRegularity">
-            <!--<option th:selected="selected" th:text="'&#45;&#45;Select regularity&#45;&#45;'" th:value="''"></option>-->
+            <option th:selected="selected" th:text="'--Select regularity or decide later--'" th:value="''"></option>
             <option th:each="regularity : ${transactionRegularities}" th:class="text-center"
                     th:value="${regularity}" th:text="${regularity.getFieldDescription()}"></option>
         </select>

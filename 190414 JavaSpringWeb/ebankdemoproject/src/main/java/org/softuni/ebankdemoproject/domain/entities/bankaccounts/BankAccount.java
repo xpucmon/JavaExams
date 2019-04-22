@@ -1,14 +1,11 @@
 package org.softuni.ebankdemoproject.domain.entities.bankaccounts;
 
 import org.softuni.ebankdemoproject.domain.entities.BaseEntity;
-import org.softuni.ebankdemoproject.domain.entities.cards.Card;
-import org.softuni.ebankdemoproject.domain.entities.transactions.Transaction;
 import org.softuni.ebankdemoproject.domain.entities.users.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity(name = "bank_accounts")
 public class BankAccount extends BaseEntity {
@@ -19,8 +16,6 @@ public class BankAccount extends BaseEntity {
     private LocalDateTime dateOpened;
     private BigDecimal balance;
     private BigDecimal interestRate;
-    private Set<Card> cards;
-    private Set<Transaction> transactions;
 
     public BankAccount() {
     }
@@ -89,15 +84,6 @@ public class BankAccount extends BaseEntity {
 
     public void setInterestRate(BigDecimal interestRate) {
         this.interestRate = interestRate;
-    }
-
-    @OneToMany(targetEntity = Card.class)
-    public Set<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(Set<Card> cards) {
-        this.cards = cards;
     }
 }
 

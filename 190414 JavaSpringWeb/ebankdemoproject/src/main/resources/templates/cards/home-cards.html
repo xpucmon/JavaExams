@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{fragments/head}"></th:block>
+</head>
+<body>
+<div class="container-fluid">
+    <header>
+        <th:block th:include="~{fragments/navbar}"></th:block>
+    </header>
+
+    <main>
+        <div class="container mt-4">
+            <hr>
+            <fieldset class="form-group">
+                <div class="row">
+                    <h1 class="col-sm-4 pt-0" id="c-headline">Cards</h1>
+                    <div class="form-check form-check-inline ml-auto">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="newDebitCardRadio"
+                               value="newDebitCard">
+                        <label class="form-check-label" for="newDebitCardRadio" th:text="'Debit card request'"></label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="newCreditCardRadio"
+                               value="newCreditCard">
+                        <label class="form-check-label" for="newCreditCardRadio" th:text="'Credit card request'"></label>
+                    </div>
+                    <div class="form-check form-check-inline ml-auto">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="ownCardsRadio"
+                               value="ownCards">
+                        <label class="form-check-label" for="ownCardsRadio" th:text="'Own cards'"></label>
+                    </div>
+                    <div class="form-check form-check-inline" sec:authorize="hasAuthority('EMPLOYEE')">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="allUsersCardsRadio"
+                               value="allUsersCards">
+                        <label class="form-check-label" for="allUsersCardsRadio" th:text="'All users cards'"></label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="container mt-4" id="c-placeholder"></div>
+    </main>
+</div>
+</body>
+</html>

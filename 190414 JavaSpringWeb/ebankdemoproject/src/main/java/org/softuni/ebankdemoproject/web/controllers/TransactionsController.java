@@ -19,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/transactions")
@@ -63,7 +62,7 @@ public class TransactionsController {
                 this.transactionsService.listInitiateTransactionTypes());
         modelAndView.addObject("regularities",  TransactionRegularity.values());
         modelAndView.addObject("ownBankAccounts",
-                this.bankAccountsService.listAllUserBankAccounts(principal.getName()));
+                this.bankAccountsService.listUserBankAccounts(principal.getName()));
         modelAndView.addObject("allBankAccounts",
                 this.bankAccountsService.listAllBankAccounts());
 
@@ -129,10 +128,6 @@ public class TransactionsController {
 
         modelAndView.setViewName("transactions/edit-transaction");
         return modelAndView;
-    }
-
-    private void addBindingModelAndEnumObjects(ModelAndView modelAndView, TransactionViewModel transactionViewModel) {
-
     }
 
     @PostMapping("/edit/{id}")
@@ -204,7 +199,7 @@ public class TransactionsController {
         modelAndView.addObject("transactionRegularities", TransactionRegularity.values());
 
         modelAndView.addObject("ownBankAccounts", this.bankAccountsService
-                .listAllUserBankAccounts(transactionViewModel.getBankAccount().getAccountOwner().getUsername()));
+                .listUserBankAccounts(transactionViewModel.getBankAccount().getAccountOwner().getUsername()));
 
     }
 }

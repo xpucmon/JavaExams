@@ -1,20 +1,20 @@
-package org.softuni.ebankdemoproject.domain.entities.cards;
+package org.softuni.ebankdemoproject.domain.models.service;
 
-import org.softuni.ebankdemoproject.domain.entities.BaseEntity;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
+import org.softuni.ebankdemoproject.domain.entities.cards.CardBrand;
+import org.softuni.ebankdemoproject.domain.entities.cards.CardStatus;
+import org.softuni.ebankdemoproject.domain.entities.cards.CardType;
 import org.softuni.ebankdemoproject.domain.entities.users.User;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity(name = "cards")
-public class Card extends BaseEntity {
+public class CardServiceModel extends BaseServiceModel {
     private String cardNumber;
     private User cardHolder;
     private CardType cardType;
-    private CardBrand cardBrand;
     private CardStatus cardStatus;
+    private CardBrand cardBrand;
     private LocalDateTime issueDate;
     private LocalDateTime expirationDate;
     private BankAccount bankAccount;
@@ -22,10 +22,6 @@ public class Card extends BaseEntity {
     private BigDecimal creditAmountCurrent;
     private BigDecimal creditAmountDue;
 
-    public Card() {
-    }
-
-    @Column(name = "cardNumber", nullable = false, unique = true, updatable = false)
     public String getCardNumber() {
         return cardNumber;
     }
@@ -34,8 +30,6 @@ public class Card extends BaseEntity {
         this.cardNumber = cardNumber;
     }
 
-    @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "card_holder", referencedColumnName = "id")
     public User getCardHolder() {
         return cardHolder;
     }
@@ -44,8 +38,6 @@ public class Card extends BaseEntity {
         this.cardHolder = cardHolder;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "card_type")
     public CardType getCardType() {
         return cardType;
     }
@@ -54,8 +46,6 @@ public class Card extends BaseEntity {
         this.cardType = cardType;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "card_brand")
     public CardBrand getCardBrand() {
         return cardBrand;
     }
@@ -64,8 +54,6 @@ public class Card extends BaseEntity {
         this.cardBrand = cardBrand;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(name = "card_status")
     public CardStatus getCardStatus() {
         return cardStatus;
     }
@@ -74,7 +62,6 @@ public class Card extends BaseEntity {
         this.cardStatus = cardStatus;
     }
 
-    @Column(name = "issue_date", nullable = false, updatable = false)
     public LocalDateTime getIssueDate() {
         return issueDate;
     }
@@ -83,7 +70,6 @@ public class Card extends BaseEntity {
         this.issueDate = issueDate;
     }
 
-    @Column(name = "expiration_date", nullable = false, unique = true, updatable = false)
     public LocalDateTime getExpirationDate() {
         return expirationDate;
     }
@@ -92,8 +78,6 @@ public class Card extends BaseEntity {
         this.expirationDate = expirationDate;
     }
 
-    @ManyToOne(targetEntity = BankAccount.class)
-    @JoinColumn(name = "bank_account", referencedColumnName = "id", nullable = false)
     public BankAccount getBankAccount() {
         return bankAccount;
     }
@@ -102,7 +86,6 @@ public class Card extends BaseEntity {
         this.bankAccount = bankAccount;
     }
 
-    @Column(name = "credit_amount_max")
     public BigDecimal getCreditAmountMax() {
         return creditAmountMax;
     }
@@ -111,7 +94,6 @@ public class Card extends BaseEntity {
         this.creditAmountMax = creditAmountMax;
     }
 
-    @Column(name = "credit_amount_current")
     public BigDecimal getCreditAmountCurrent() {
         return creditAmountCurrent;
     }
@@ -120,7 +102,6 @@ public class Card extends BaseEntity {
         this.creditAmountCurrent = creditAmountCurrent;
     }
 
-    @Column(name = "credit_amount_due")
     public BigDecimal getCreditAmountDue() {
         return creditAmountDue;
     }

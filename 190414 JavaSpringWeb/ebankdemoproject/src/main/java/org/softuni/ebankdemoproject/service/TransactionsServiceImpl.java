@@ -81,7 +81,7 @@ public class TransactionsServiceImpl implements TransactionsService {
     public List<TransactionServiceModel> listAllUserTransactions(String name) {
 
         List<BankAccountsServiceModel> allAccountsByAccountOwner = this.bankAccountsService
-                .listAllUserBankAccounts(name);
+                .listUserBankAccounts(name);
 
         List<TransactionServiceModel> allTransactionsByAccountOwner = new ArrayList<>();
 

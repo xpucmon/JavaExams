@@ -1,15 +1,14 @@
 package org.softuni.ebankdemoproject.domain.entities.cards;
 
-public enum CardStatus {
-    NOT_ACTIVE("Not active"),
-    ACTIVE("Active"),
-    SUSPENDED("Suspended"),
-    DEACTIVATED("Deactivated"),
-    EXPIRED("Expired");
+public enum CardBrand {
+    VISA_CREDIT_CARD("VISA"),
+    MASTERCARD_CREDIT_CARD("MasterCard"),
+    VISA_ELECTRON_DEBIT_CARD("Visa Electron"),
+    MAESTRO_DEBIT_CARD("Maestro");
 
     private String fieldDescription;
 
-    private CardStatus(String value) {
+    private CardBrand(String value) {
         fieldDescription = value;
     }
 

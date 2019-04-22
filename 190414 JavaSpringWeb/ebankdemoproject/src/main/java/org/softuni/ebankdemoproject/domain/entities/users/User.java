@@ -1,8 +1,6 @@
 package org.softuni.ebankdemoproject.domain.entities.users;
 
 import org.softuni.ebankdemoproject.domain.entities.BaseEntity;
-import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
-import org.softuni.ebankdemoproject.domain.entities.cards.Card;
 import org.softuni.ebankdemoproject.domain.entities.loans.Loan;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,10 +15,6 @@ public class User extends BaseEntity implements UserDetails {
     private String lastName;
     private String email;
     private String phone;
-    private Set<BankAccount> bankAccounts;
-    private Set<Beneficiary> beneficiaries;
-    private Set<Loan> loans;
-    private Set<Card> cards;
     private Set<Role> authorities;
 
     public User() {
@@ -78,43 +72,6 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    @Column(name = "bank_accounts")
-    @OneToMany(targetEntity = BankAccount.class)
-    public Set<BankAccount> getBankAccounts() {
-        return bankAccounts;
-    }
-
-    public void setBankAccounts(Set<BankAccount> bankAccounts) {
-        this.bankAccounts = bankAccounts;
-    }
-
-    @OneToMany(targetEntity = Beneficiary.class)
-    public Set<Beneficiary> getBeneficiaries() {
-        return beneficiaries;
-    }
-
-    public void setBeneficiaries(Set<Beneficiary> beneficiaries) {
-        this.beneficiaries = beneficiaries;
-    }
-
-    @OneToMany(targetEntity = Loan.class, mappedBy = "borrower")
-    public Set<Loan> getLoans() {
-        return loans;
-    }
-
-    public void setLoans(Set<Loan> loans) {
-        this.loans = loans;
-    }
-
-    @OneToMany(targetEntity = Card.class, mappedBy = "cardHolder")
-    public Set<Card> getCards() {
-        return cards;
-    }
-
-    public void setCards(Set<Card> cards) {
-        this.cards = cards;
     }
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)

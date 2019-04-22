@@ -23,7 +23,7 @@
             <td th:class="text-right" th:text="${transaction.getAmount()}"></td>
             <td th:text="|${transaction.getRecipientFirstName()} ${transaction.getRecipientLastName()} |"></td>
             <td th:text="${#temporals.format(transaction.getTransactionDateTime(), 'yyyy-MM-dd HH:mm')}"></td>
-            <td th:text="${transaction.getStatus().getFieldDescription()}" th:pattern="dd-MM-yyyy"></td>
+            <td th:text="${transaction.getStatus().getFieldDescription()}"></td>
             <td>
                 <div class="dropdown">
                     <button class="btn btn-info dropdown-toggle" type="button" id="transactionActionButton"

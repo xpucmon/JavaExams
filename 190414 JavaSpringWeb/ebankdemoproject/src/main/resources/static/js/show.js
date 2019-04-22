@@ -1,3 +1,4 @@
+//Bank Accounts funcs
 $(document).ready(function () {
     $('#ownBankAccountsRadio').attr('checked', true);
     $('#ba-headline').text("Own bank accounts");
@@ -22,6 +23,46 @@ $(document).ready(() =>
         $('#ba-placeholder').empty().load('all');
     }));
 
+//Cards funcs
+$(document).ready(function () {
+    $('#ownCardsRadio').attr('checked', true);
+    $('#c-headline').text("Own cards");
+    $('#c-placeholder').empty().load('own');
+});
+
+$(document).ready(() =>
+    $('#newDebitCardRadio').click(() => {
+        $('#c-headline').text("Debit card request");
+        $('#c-placeholder').empty().load('debit');
+    }));
+
+$(document).ready(() =>
+    $('#newCreditCardRadio').click(() => {
+        $('#c-headline').text("Credit card request");
+        $('#c-placeholder').empty().load('credit');
+    }));
+
+$(document).ready(() =>
+    $('#ownCardsRadio').click(() => {
+        $('#c-headline').text("Own cards");
+        $('#c-placeholder').empty().load('own');
+    }));
+
+$(document).ready(() =>
+    $('#allUsersCardsRadio').click(() => {
+        $('#c-headline').text("All users' cards");
+        $('#c-placeholder').empty().load('all');
+    }));
+
+function showCreditLimit(currentObject) {
+    if ($(currentObject).is(":checked") && $(currentObject).val() === "CREDIT_CARD") {
+        $('#inputMaxCredit').show().focus();
+    } else {
+        $('#inputMaxCredit').val('').hide();
+    }
+}
+
+//Transactions funcs
 $(document).ready(function () {
     $('#ownTransactionsRadio').attr('checked', true);
     $('#tr-headline').text("Transaction");
@@ -46,17 +87,6 @@ $(document).ready(() =>
         $('#tr-placeholder').empty().load('all');
     }));
 
-$(document).ready(() =>
-    $('#allTransactionsRadio').click(() => {
-        $('#tr-headline').text("All transactions");
-        $('#tr-placeholder').empty().load('all');
-    }));
-
-$(document).on('click', '#cancel', function (e) {
-    e.preventDefault();
-    parent.history.back();
-});
-
 function showRecipient(currentObject) {
     if ($(currentObject).is(":checked") && $(currentObject).val() === "TRANSFER") {
         $('#recipientIbanInput').show().focus();
@@ -78,6 +108,11 @@ function showRegularities(currentObject) {
     }
 }
 
+//Other funcs
+$(document).on('click', '#cancel', function (e) {
+    e.preventDefault();
+    parent.history.back();
+});
 
 // $('button#cancel').on('click', function(e){
 //     e.preventDefault();
@@ -86,15 +121,15 @@ function showRegularities(currentObject) {
 
 //Using .ajax
 // $(document).ready(() =>
-//     $('#virusesRadio').click(function () {
+//     $('#ownBankAccountsRadio').click(function () {
 //         $.ajax({
 //             method: "GET",
-//             url: "show",
+//             url: "home",
 //             cache: false,
 //             success: () => {
-//                 $('#headline').text("All Viruses");
-//                 $('#placeholder').empty().load("show-viruses");
+//                 $('#ba-headline').text("Own bank accounts");
+//                 $('#ba-placeholder').empty().load("own-accounts");
 //             },
-//             error: () => $('#placeholder').text("Loading failed....")
+//             error: () => $('#ba-placeholder').text("Loading failed....")
 //         })
 //     }));

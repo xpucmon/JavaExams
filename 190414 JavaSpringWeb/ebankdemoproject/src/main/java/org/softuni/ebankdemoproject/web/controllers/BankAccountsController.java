@@ -3,7 +3,6 @@ package org.softuni.ebankdemoproject.web.controllers;
 import org.modelmapper.ModelMapper;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.AccountStatus;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.AccountType;
-import org.softuni.ebankdemoproject.domain.entities.users.User;
 import org.softuni.ebankdemoproject.domain.models.binding.BankAccountAddBindingModel;
 import org.softuni.ebankdemoproject.domain.models.binding.BankAccountsEditBindingModel;
 import org.softuni.ebankdemoproject.domain.models.service.BankAccountsServiceModel;
@@ -11,7 +10,6 @@ import org.softuni.ebankdemoproject.service.BankAccountsService;
 import org.softuni.ebankdemoproject.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +40,7 @@ public class BankAccountsController {
         modelAndView.addObject("bankAccountOwner",
                 this.usersService.loadUserByUsername(principal.getName()));
         modelAndView.addObject("ownBankAccounts",
-                this.bankAccountsService.listAllUserBankAccounts(principal.getName()));
+                this.bankAccountsService.listUserBankAccounts(principal.getName()));
         modelAndView.addObject("allBankAccounts",
                 this.bankAccountsService.listAllBankAccounts());
 
@@ -87,9 +85,8 @@ public class BankAccountsController {
     @GetMapping("/own")
     public ModelAndView showOwnBankAccounts(Principal principal, ModelAndView modelAndView) {
 
-        //TODO integrate the ViewModel instead of the owner's list
-        modelAndView.addObject("bankAccountsOwner",
-                (User) this.usersService.loadUserByUsername(principal.getName()));
+        modelAndView.addObject("userBankAccounts",
+                this.bankAccountsService.listUserBankAccounts(principal.getName()));
 
         modelAndView.setViewName("bankaccounts/own-accounts");
         return modelAndView;

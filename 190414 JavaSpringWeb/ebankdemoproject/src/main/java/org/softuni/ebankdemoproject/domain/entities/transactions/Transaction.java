@@ -3,7 +3,6 @@ package org.softuni.ebankdemoproject.domain.entities.transactions;
 import org.iban4j.Iban;
 import org.softuni.ebankdemoproject.domain.entities.BaseEntity;
 import org.softuni.ebankdemoproject.domain.entities.bankaccounts.BankAccount;
-import org.softuni.ebankdemoproject.domain.entities.users.User;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

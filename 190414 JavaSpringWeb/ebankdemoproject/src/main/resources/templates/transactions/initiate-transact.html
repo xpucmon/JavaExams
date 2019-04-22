@@ -10,7 +10,7 @@
                 <label for="inputOwnBankAccount">Bank Account</label>
                 <select class="form-control" th:field="*{bankAccount}" id="inputOwnBankAccount">
                     <option th:each="ownBankAccount : ${ownBankAccounts}" th:class="text-center"
-                            th:value="${ownBankAccount.getIban()}" th:text="${ownBankAccount.getIban()}"></option>
+                            th:value="${ownBankAccount.getIban()}" th:text="|${ownBankAccount.getIban()} - ${ownBankAccount.getAccountType().getFieldDescription()}|"></option>
                 </select>
                 <small id="ownBankAccountHelp" th:each="error : ${#fields.errors('bankAccount')}"
                        th:text="${error}"></small>

@@ -10,7 +10,7 @@ public interface BankAccountsService {
 
     List<BankAccountsServiceModel> listAllBankAccounts();
 
-    List<BankAccountsServiceModel> listAllUserBankAccounts(String name);
+    List<BankAccountsServiceModel> listUserBankAccounts(String name);
 
     void deleteBankAccount(String id);
 

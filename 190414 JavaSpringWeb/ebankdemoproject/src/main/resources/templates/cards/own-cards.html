@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment>
+    <table class="table table-hover mt-4" id="cardsTable"
+           data-filter-control="true" data-filter-show-clear="true">
+        <thead>
+        <tr class="font-weight-bold">
+            <th scope="col">#</th>
+            <th scope="col" data-field="cardNumber" data-filter-control="select">Card number</th>
+            <th scope="col" data-field="cardHolderNames" data-filter-control="select">Card holder names</th>
+            <th scope="col" data-field="type"  data-filter-control="select">Card type</th>
+            <th scope="col" data-field="status"  data-filter-control="select">Card status</th>
+            <th scope="col" data-field="status"  data-filter-control="select">Valid until</th>
+            <th scope="col" data-field="maxCredit"  data-filter-control="select">Max credit</th>
+            <th scope="col" data-field="usedCredit"  data-filter-control="select">Used credit</th>
+            <th scope="col" data-field="currentCredit"  data-filter-control="select">Current credit</th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="card, index : ${userCards}">
+            <td scope="row" th:text="${index.count}"></td>
+            <td th:text="${card.getCardNumber()}"></td>
+            <td th:text="|${card.getCardHolder().getFirstName().toUpperCase()}
+                          ${card.getCardHolder().getLastName().toUpperCase()}|"></td>
+            <td th:text="${card.getCardType().getFieldDescription()}"></td>
+            <td th:text="${card.getCardStatus().getFieldDescription()}"></td>
+            <td th:text="${#temporals.format(card.getExpirationDate(), 'MM/yy')}" th:class="text-right"></td>
+            <td th:text="${card.getCreditAmountMax()}" th:class="text-right"></td>
+            <td th:text="${card.getCreditAmountDue()}" th:class="text-right"></td>
+            <td th:text="${card.getCreditAmountCurrent()}" th:class="text-right"></td>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="cardActionButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="transactionActionButton">
+                        <a class="dropdown-item" th:text="'View/Edit'"
+                           th:href="@{/cards/edit/{cardNumber}(cardNumber=${card.getCardNumber()})}"></a>
+
+                        <th:block th:if="${#authentication.getAuthorities().contains('EMPLOYEE')
+                                        && card.getCardStatus().equals(notActiveStatus)}">
+                            <a class="dropdown-item" th:text="'Activate'"
+                               th:href="@{/cards/activate/{cardNumber}(cardNumber=${card.getCardNumber()})}"></a>
+                            <a class="dropdown-item" th:text="'Reject card'"
+                               th:href="@{/cards/reject/{cardNumber}(cardNumber=${card.getCardNumber()})}"></a>
+                        </th:block>
+
+                        <th:block th:if="${#authentication.getAuthorities().contains('EMPLOYEE')
+                                        && !card.getCardStatus().equals(notActiveStatus)}">
+                            <a class="dropdown-item" th:text="'Activate'"
+                               th:href="@{/cards/activate/{cardNumber}(cardNumber=${card.getCardNumber()})}"></a>
+                            <a class="dropdown-item" th:text="'Suspend'"
+                               th:href="@{/cards/suspend/{cardNumber}(cardNumber=${card.getCardNumber()})}"></a>
+                            <a class="dropdown-item" th:text="'Deactivate'"
+                               th:href="@{/cards/deactivate/{cardNumber}(cardNumber=${card.getCardNumber()})}"></a>
+                        </th:block>
+
+                        <th:block th:if="${card.getCardStatus().equals(notActiveStatus)}">
+                            <a class="dropdown-item" th:text="'Delete card request'"
+                               th:href="@{/cards/delete/{cardNumber}(cardNumber=${card.getCardNumber()})}"></a>
+                        </th:block>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</th:block>
+
+<!--<script>-->
+    <!--$(function () {-->
+        <!--$('#cardsTable').bootstrapTable()-->
+    <!--})-->
+<!--</script>-->

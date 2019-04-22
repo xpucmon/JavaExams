@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<div lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <hr class="mt-4"/>
+    <div th:class="text-center"></div>
+    <form class="form w-50 mx-auto" th:action="@{/cards/debit}" method="post" th:object="${bindingModel}">
+        <div class="form-group" th:classappend="${#fields.hasErrors('bankAccount')}? 'text-danger'"
+             sec:authorize="!hasAuthority('EMPLOYEE')">
+            <label for="inputOwnBankAccount">Debit bank account</label>
+            <select class="form-control" th:field="*{bankAccount}" id="inputOwnBankAccount">
+                <option th:each="account : ${ownCheckingAccounts}" th:class="text-center"
+                        th:value="${account.getIban()}" th:text="|${account.getIban()} -
+                            ${account.getAccountType().getFieldDescription()}|"></option>
+            </select>
+            <small id="ownBankAccountHelp" th:each="error : ${#fields.errors('bankAccount')}"
+                   th:text="${error}"></small>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('bankAccount')}? 'text-danger'"
+             sec:authorize="hasAuthority('EMPLOYEE')">
+            <label for="inputUserBankAccount">Debit bank account</label>
+            <select class="form-control" th:field="*{bankAccount}" id="inputUserBankAccount">
+                <option th:each="account : ${allCheckingAccounts}" th:class="text-center"
+                        th:value="${account.getIban()}"
+                        th:text="${account.getAccountOwner().getUsername()}
+                            + ' - ' + ${account.getIban()}">
+                </option>
+            </select>
+            <small id="userBankAccountHelp" th:each="error : ${#fields.errors('bankAccount')}"
+                   th:text="${error}"></small>
+        </div>
+        <div class="form-group" th:classappend="${#fields.hasErrors('cardBrand')}? 'text-danger'">
+            <label for="inputCardBrand">Card brand</label>
+            <select class="form-control" th:field="*{cardBrand}" id="inputCardBrand">
+                <option th:each="cardBrand : ${debitCardBrands}" th:class="text-center"
+                        th:value="${cardBrand}" th:text="${cardBrand.getFieldDescription()}"></option>
+            </select>
+            <small id="cardBrandHelp" th:each="error : ${#fields.errors('cardBrand')}"
+                   th:text="${error}"></small>
+        </div>
+        <button type="submit" class="btn bg-info text-white mt-4">Request card</button>
+    </form>
+</div>

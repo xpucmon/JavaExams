@@ -1,8 +1,8 @@
 package org.softuni.ebankdemoproject.domain.entities.cards;
 
 public enum CardType {
-    DEBIT("Debit card"),
-    CREDIT("Credit card");
+    DEBIT_CARD("Debit card"),
+    CREDIT_CARD("Credit card");
 
     private String fieldDescription;
 
